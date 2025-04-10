@@ -1,0 +1,40 @@
+
+
+
+
+.dashboard {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Header, Main Content, Footer */
+    grid-template-columns: 250px 1fr; /* Sidebar, Main Content */
+    min-height: 100vh;
+  }
+  
+  .header {
+    grid-column: 1 / -1; /* Span all columns */
+    background: #333;
+    color: #fff;
+    padding: 1rem;
+  }
+  
+  .sidebar {
+    background: #444;
+    color: #fff;
+    padding: 1rem;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: calc(100vh - 120px); /* Adjust height based on header and footer */
+  }
+  
+  .main-content {
+    background: #f4f4f4;
+    padding: 1rem;
+    overflow-y: auto; /* Enable scrolling for main content */
+    max-height: calc(100vh - 120px); /* Match sidebar height */
+  }
+  
+  .footer {
+    grid-column: 1 / -1; /* Span all columns */
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem
+  }
