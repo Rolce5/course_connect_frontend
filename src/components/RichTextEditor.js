@@ -11,7 +11,7 @@ const RichTextEditor = ({
   return (
     <div>
       <label
-        className="block text-lg font-semibold text-gray-700 mb-2"
+        className="block text-sm font-medium text-gray-700 mb-1"
       >
         {label}
       </label>

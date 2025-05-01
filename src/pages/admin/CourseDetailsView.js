@@ -81,12 +81,13 @@ export default function CourseDetailsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header with back button */}
       <div className="flex items-center mb-6">
-        <button
-          onClick={() => navigate("/admin/courses")}
+        <Link
+          to="/admin/courses"
           className="flex items-center text-indigo-600 hover:text-indigo-800 mr-4"
         >
           <FiArrowLeft className="mr-1" /> Back to Courses
-        </button>
+        </Link>
+        
         <CourseStatusBadge isActive={course.isActive} />
       </div>
 
@@ -117,7 +118,7 @@ export default function CourseDetailsPage() {
                   <div className="flex items-center mr-4">
                     <FiStar className="text-yellow-400 mr-1" />
                     <span className="text-gray-700 font-medium">
-                      {averageRating.toFixed(1)} ({course.reviewsCount || 0}{" "}
+                      {averageRating.toFixed(1)} ({course.reviewsCount || 0}
                       reviews)
                     </span>
                   </div>
@@ -166,13 +167,6 @@ export default function CourseDetailsPage() {
                 </p>
               </div>
 
-              {/* <div className="bg-gray-50 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <FiBookOpen className="text-indigo-500 mr-2" />
-                  <span className="text-sm text-gray-500">Lessons</span>
-                </div>
-                <p className="text-lg font-semibold mt-1">{totalLessons}</p>
-              </div> */}
               <Link
                 to={`/admin/courses/${courseId}/modules`}
                 className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors group"

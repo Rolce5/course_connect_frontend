@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import { getAllCourses } from "../../services/couseService";
 import { Link } from "react-router-dom";
-import { getUserEnrollments } from "../../services/enrollmentService";
+import { getAllUserEnrollments } from "../../services/enrollmentService";
 
 const DashboardPage = () => {
   const [courses, setCourses] = useState([]);
@@ -23,7 +23,7 @@ const DashboardPage = () => {
       // Run both functions concurrently using Promise.all
       const [courseData, enrollmentData] = await Promise.all([
         getAllCourses(),  // Fetch all courses
-        getUserEnrollments(),  // Fetch user enrollments
+        getAllUserEnrollments(),  // Fetch user enrollments
       ]);
   
       // Once both are resolved, update the state with the data

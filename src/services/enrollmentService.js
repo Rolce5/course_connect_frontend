@@ -21,7 +21,20 @@ export const enrollInCourse = async (courseId) => {
   }
 };
 
-export const getUserEnrollments = async () => {
+export const getUserEnrollmentForCourse = async (courseId) => {
+  try {
+    const response = await apiClient.get(`courses/enrollment/${courseId}`);
+    return response.data || null;
+  } catch (error) {
+    console.error(
+      "Failed to fetch course enrollment",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+export const getAllUserEnrollments = async () => {
   try {
     const response = await apiClient.get("courses/enrollment/all");
     return response.data || [];
@@ -47,13 +60,40 @@ export const getRecentEnrollments = async () => {
   }
 };
 
-export const updateEnrollmentProgress = async () => {
+// export const updateEnrollmentProgress = async ({
+//   enrollmentId,
+//   lastLessonId,
+//   progress,
+//   courseId,
+// }) => {
+//   try {
+//     const response = await apiClient.patch(
+//       `courses/enrollment/${courseId}/progress`,
+//       {
+//         lastLessonId,
+//         markComplete: progress === 100,
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error(
+//       "Failed to update enrollment progress",
+//       error.response?.data || error.message
+//     );
+//     throw error;
+//   }
+// };
+
+export const updateEnrollmentProgress = async ({ courseId, lastLessonId }) => {
   try {
-    const response = await apiClient.post("courses/enrollment/recent");
-    return response.data || [];
+    const response = await apiClient.patch(
+      `courses/enrollment/${courseId}/progress`,
+      { lastLessonId } // No more markComplete flag
+    );
+    return response.data;
   } catch (error) {
     console.error(
-      "Failed to fetch recent enrollments",
+      "Failed to update enrollment progress",
       error.response?.data || error.message
     );
     throw error;

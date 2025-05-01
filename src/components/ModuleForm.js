@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FiClock, FiEdit2, FiPlus } from "react-icons/fi";
 import Input from "./Input";
 import Button from "./Button";
+import RichTextEditor from "./RichTextEditor";
 import { getHighestModuleOrder } from "../services/moduleService";
 import { motion } from "framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
@@ -107,6 +108,17 @@ export default function ModuleForm({
               className="focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
 
+{/* <RichTextEditor
+              label="Description"
+              menubar={true}
+              height="250"
+              value={formData.description}
+              onChange={(description) =>
+                setFormData({ ...formData, description })
+              }
+              placeholder="What will students learn in this module?"
+
+            /> */}
             {/* Description */}
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">

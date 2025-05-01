@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/Header';
@@ -6,52 +7,55 @@ import Footer from '../components/Footer';
 import { getProfile } from '../services/userService';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children, hideSidebar = false }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [user, setUser] = useState(null); // Add user state
+  const [user, setUser] = useState(null);
 
-  // Fetch user data ONCE when layout mounts
   useEffect(() => {
     const loadUser = async () => {
       const userData = await getProfile();
       setUser(userData);
     };
     loadUser();
-  }, []); // Empty dependency array = runs once
+  }, []);
 
-  if (!user) return <LoadingSpinner />; // Optional loading state
+  if (!user) return <LoadingSpinner />;
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Mobile sidebar backdrop */}
-      {mobileSidebarOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black opacity-50 lg:hidden"
-          onClick={() => setMobileSidebarOpen(false)}
-        ></div>
+      {/* Conditionally render sidebar */}
+      {!hideSidebar && (
+        <>
+          {mobileSidebarOpen && (
+            <div
+              className="fixed inset-0 z-20 bg-black opacity-50 lg:hidden"
+              onClick={() => setMobileSidebarOpen(false)}
+            />
+          )}
+          <Sidebar
+            sidebarOpen={sidebarOpen}
+            mobileSidebarOpen={mobileSidebarOpen}
+            setMobileSidebarOpen={setMobileSidebarOpen}
+            userProfile={user}
+          />
+        </>
       )}
-
-      {/* Sidebar (pass user data) */}
-      <Sidebar 
-        sidebarOpen={sidebarOpen}
-        mobileSidebarOpen={mobileSidebarOpen}
-        setMobileSidebarOpen={setMobileSidebarOpen}
-        userProfile={user}
-      />
 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header 
+        <Header
           setMobileSidebarOpen={setMobileSidebarOpen}
           setSidebarOpen={setSidebarOpen}
           sidebarOpen={sidebarOpen}
-          userProfile={user} // Pass user to header if needed
+          userProfile={user}
+          showSidebarToggle={!hideSidebar}
         />
 
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-4">
-          <div className="mx-auto max-w-7xl">
-            {children || <Outlet />} {/* Handles both nested and direct children */}
+        <main className="flex-1 overflow-y-auto bg-gray-50">
+          <div className="mx-auto max-w-full">
+            {/* {children || <Outlet />} */}
+            <Outlet context={{ user }} /> {/* 👈 Critical change */}
           </div>
         </main>
 

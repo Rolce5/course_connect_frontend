@@ -41,7 +41,7 @@ const Input = ({
           required={required}
           className={`w-full ${icon ? 'pl-10' : 'pl-4'} pr-4 py-3 border ${
             error ? 'border-red-500' : 'border-gray-200 focus:border-indigo-500'
-          } rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all ${className}`}
+          } rounded-xl focus:ring-1 focus:ring-indigo-500 transition-all ${className}`}
         />
         {isPassword && (
           <button

@@ -172,11 +172,11 @@ export default function ManageModulesPage() {
   // };
   const handleDeleteModule = async () => {
     if (!moduleToDelete) return;
-  
+
     setIsDeleting(true);
     try {
       await deleteModule(moduleToDelete.id);
-  
+
       setModules(modules.filter((m) => m.id !== moduleToDelete.id));
       toast.success("Module deleted successfully", {
         position: "top-center",
@@ -191,20 +191,20 @@ export default function ManageModulesPage() {
     } catch (error) {
       console.error("Error deleting module:", error);
       toast.error("Failed to delete module", {
-        position: "top-center"
+        position: "top-center",
       });
     } finally {
       setIsDeleting(false);
     }
   };
-  
+
   const handleDeleteLesson = async () => {
     if (!lessonToDelete) return;
-  
+
     setIsDeleting(true);
     try {
       await deleteLesson(lessonToDelete.id);
-  
+
       setModules(
         modules.map((module) => ({
           ...module,
@@ -214,27 +214,21 @@ export default function ManageModulesPage() {
       toast.success("Lesson deleted successfully", {
         position: "bottom-right", // Different position for lessons
         autoClose: 2500,
-        theme: "colored"
+        theme: "colored",
       });
       setLessonToDelete(null);
     } catch (error) {
       console.error("Error deleting lesson:", error);
       toast.error("Failed to delete lesson", {
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
     } finally {
       setIsDeleting(false);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

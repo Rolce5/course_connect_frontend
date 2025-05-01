@@ -50,7 +50,6 @@ export default function NewCoursePage() {
         <CourseForm 
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
-          onCancel={() => navigate('/admin/courses')}
           error={error}
         />
       </div>

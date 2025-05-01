@@ -57,8 +57,8 @@ export default function CourseListPage() {
       .includes(searchTerm.toLowerCase());
     const matchesFilter =
       filter === "all" ||
-      (filter === "active" && course.isActive) ||
-      (filter === "draft" && !course.isActive);
+      (filter === "active" && course.is_active) ||
+      (filter === "draft" && !course.is_active);
     return matchesSearch && matchesFilter;
   });
 
@@ -182,10 +182,10 @@ export default function CourseListPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <CourseStatusBadge isActive={course.isActive} />
+                        <CourseStatusBadge isActive={course.is_active} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(course.updatedAt).toLocaleDateString(
+                        {new Date(course.updated_at).toLocaleDateString(
                           "en-US",
                           {
                             year: "numeric",

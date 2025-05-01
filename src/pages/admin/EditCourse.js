@@ -62,7 +62,6 @@ export default function EditCoursePage() {
           course={course}
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
-          onCancel={() => navigate("/admin/courses")}
           error={error}
         />
       </div>

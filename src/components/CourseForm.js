@@ -5,17 +5,17 @@ import Input from "./Input"; // Import the Input component
 import Button from "./Button"; // Import the Button component
 import { motion } from "framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 export default function CourseForm({
   course,
   onSubmit,
-  onCancel,
   isSubmitting,
   error: serverError
 }) {
   const [formData, setFormData] = useState({
     title: course?.title || "",
-    shortDescription: course?.shortDescription || "",
+    shortDescription: course?.short_description || "",
     description: course?.description || "",
     pricing: course?.pricing || null,
     duration: course?.duration || 0,
@@ -24,11 +24,12 @@ export default function CourseForm({
     difficulty: course?.difficulty || "",
     imageUrl: course?.imageUrl || "",
     videoUrl: course?.videoUrl || "",
-    isActive: course?.isActive || false,
+    isActive: course?.is_active || false,
   });
 
   const [imagePreview, setImagePreview] = useState(course?.imageUrl || null);
   const [imageFile, setImageFile] = useState(null); // Store the image file
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -323,7 +324,7 @@ export default function CourseForm({
       <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
         <Button
           type="button"
-          onClick={onCancel}
+          onClick={() => navigate(-1)}
           className="bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
           Cancel

@@ -16,9 +16,10 @@ import {
   FiLock,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import Button from "../../components/Button";
 import {
   enrollInCourse,
-  getUserEnrollments,
+  getAllUserEnrollments,
 } from "../../services/enrollmentService";
 import { getCourseWithLessons } from "../../services/couseService";
 import {
@@ -27,30 +28,6 @@ import {
 } from "../../services/paymentService";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";
-
-// Mock data for CourseDetails
-// const getUserEnrollments = async () => {
-//   await new Promise(resolve => setTimeout(resolve, 500));
-//   return [{ courseId: 1 }];
-// };
-
-// const enrollInCourse = async (courseId) => {
-//   await new Promise(resolve => setTimeout(resolve, 1000));
-//   return { success: true };
-// };
-
-// const getEnrollment = async (courseId) => {
-//   await new Promise((resolve) => setTimeout(resolve, 500));
-//   return {
-//     progress: 25,
-//     lastLessonId: 3,
-//   };
-// };
-
-// const getLessonNotes = async (lessonId) => {
-//   await new Promise((resolve) => setTimeout(resolve, 300));
-//   return "These are my notes for this lesson...";
-// };
 
 const StudentCourseDetailPage = () => {
   const { courseId } = useParams();
@@ -69,7 +46,7 @@ const StudentCourseDetailPage = () => {
       try {
         const [courseData, enrollments] = await Promise.all([
           getCourseWithLessons(courseId),
-          getUserEnrollments(),
+          getAllUserEnrollments(),
         ]);
 
         // Count the lessons
@@ -93,63 +70,6 @@ const StudentCourseDetailPage = () => {
     fetchCourseDetails();
   }, [courseId]);
 
-  // const handleEnroll = async () => {
-  //   setIsEnrolling(true);
-  //   try {
-  //     if (course.pricing > 0) {
-  //       // Paid course – initiate payment
-  //       const res = await processPayment(courseId);
-  //       console.log("Payment initiation response:", res); // 👈 ADD THIS LINE
-
-  //       if (res?.link) {
-  //         window.location.href = res.link;
-  //       } else {
-  //         toast.error("Failed to initiate payment.");
-  //       }
-  //     } else {
-  //       // Free course – direct enrollment
-  //       await enrollInCourse(courseId);
-  //       setIsEnrolled(true);
-  //       toast.success("Enrolled successfully!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Enrollment/payment failed:", error);
-  //     toast.error(error?.response?.data?.message || "Enrollment failed");
-  //   } 
-  // };
-
-  // useEffect(() => {
-  //   const query = new URLSearchParams(window.location.search);
-  //   const transactionId = query.get("transactionId");
-  //   const paymentSuccess = query.get("payment") === "success";
-
-  //   const verifyPaymentAndEnroll = async () => {
-  //     if (paymentSuccess && transactionId) {
-  //       try {
-  //         console.log("triggered");
-  //         const verification = await checkPaymentStatus(transactionId);
-
-  //         if (verification.success) {
-  //           // Explicitly enroll the user
-  //           await enrollInCourse(courseId);
-  //           setIsEnrolled(true);
-  //           toast.success("Payment successful! You are now enrolled.");
-
-  //           // Clean URL
-  //           window.history.replaceState({}, "", window.location.pathname);
-  //         } else {
-  //           toast.error("Payment verification failed");
-  //         }
-  //       } catch (error) {
-  //         toast.error("Error verifying payment");
-  //       }
-  //     }
-  //   };
-
-  //   verifyPaymentAndEnroll();
-  // }, []);
-  // In your StudentCourseDetailPage component
-// StudentCourseDetailPage.js
 
 const handleEnroll = async () => {
   setIsEnrolling(true);
@@ -284,7 +204,7 @@ const handleEnroll = async () => {
 
                   {isEnrolled ? (
                     <button
-                      // onClick={() => navigate(`/learn/${courseId}/lessons/${lesson.id}`)}
+                      onClick={() => navigate(`/${course.title}/${courseId}/learn`)}
                       className="w-full group relative overflow-hidden bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-4 px-6 rounded-xl shadow-lg hover:shadow-emerald-500/20 transition-all duration-300"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -316,16 +236,11 @@ const handleEnroll = async () => {
                           </div>
                         )}
                       </div>
-                      {/* <button
-                        onClick={handleEnroll}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium mb-3"
-                      >
-                        Enroll Now
-                      </button> */}
-                      <button
+                     
+                      <Button
                         onClick={handleEnroll}
                         disabled={isEnrolling}
-                        className={`w-full py-3 rounded-lg font-medium text-white rounded-lg mb-3 transition-colors disabled:opacity-50 flex items-center justify-center ${
+                        className={` py-3 text-white rounded-lg mb-3 transition-colors disabled:opacity-50 flex items-center justify-center ${
                           isEnrolling
                             ? "bg-red-600 hover:bg-red-700"
                             : "bg-blue-600 hover:bg-blue-700"
@@ -358,7 +273,7 @@ const handleEnroll = async () => {
                         ) : (
                           <div> Enroll Now</div>
                         )}
-                      </button>
+                      </Button>
                     </>
                   )}
 
@@ -501,10 +416,11 @@ const handleEnroll = async () => {
                               </p>
                             </div>
                             {isEnrolled ? (
+                              
                               <button
                                 onClick={() =>
                                   navigate(
-                                    `/learn/${courseId}/lessons/${lesson.id}`
+                                    `/${course.title}/${courseId}/learn`
                                   )
                                 }
                                 className="text-blue-600 hover:text-blue-800 text-sm font-medium"

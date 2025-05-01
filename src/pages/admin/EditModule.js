@@ -14,9 +14,6 @@ export default function EditModulePage() {
 
   useEffect(() => {
     const fetchModule = async () => {
-      console.log("moduleId:", moduleId);
-  console.log("courseId:", courseId);
-
       try {
         const module = await getModuleById(moduleId);
         console.log(module)

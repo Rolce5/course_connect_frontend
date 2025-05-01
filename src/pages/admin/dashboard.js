@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FiBook,
   FiUsers,
@@ -76,9 +77,9 @@ const AdminDashboardPage = () => {
           <button className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300">
             Export
           </button>
-          <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+          <Link to="/admin/courses/new" className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
             Create Course
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -224,7 +225,7 @@ const AdminDashboardPage = () => {
                   <div className="flex items-center space-x-4">
                     <div className="h-10 w-10 rounded-full bg-gray-200"></div>
                     <div>
-                      <h3 className="font-medium text-gray-900">{enrollment.users.first_name} {enrollment.users.last_name}</h3>
+                      <h3 className="font-medium text-gray-900">{enrollment.user.first_name} {enrollment.user.last_name}</h3>
                       <p className="text-sm text-gray-500">{enrollment.course.title}</p>
                     </div>
                   </div>
