@@ -20,7 +20,11 @@ export const registerUser = async (userData) => {
 
 export const loginUser = async (credentials) => {
   try {
-    const response = await apiClient.post('/auth/signin', credentials);
+    const response = await apiClient.post(
+      "/auth/signin",
+      credentials,
+      { withCredentials: true } 
+    );
     return response.data;
   } catch (error) {
     console.error('Login failed:', error.response?.data || error.message);
@@ -28,3 +32,19 @@ export const loginUser = async (credentials) => {
   }
 };
 
+// Add logout function
+export const logoutUser = async () => {
+  try {
+    // Clear client-side token
+    localStorage.removeItem('token');
+    
+    // Call backend logout if needed
+    await apiClient.post(
+      '/auth/logout', 
+      {}, 
+      { withCredentials: true }
+    );
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+};
