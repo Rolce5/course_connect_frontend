@@ -264,7 +264,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                 <div className="lg:col-span-2 space-y-6">
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                       <div>{lesson.title} </div>
+                      <div>{lesson.title} </div>
                     </h2>
                     <div
                       className="prose prose-indigo max-w-none"
@@ -455,9 +455,11 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                                 <h3 className="font-medium text-gray-800">
                                   {question.question_text}
                                 </h3>
-                                <h3 className="font-medium text-gray-800">
-                                  {question.hint}
-                                </h3>
+                                <p
+                                  className="font-light text-gray-800  text-xs italic"
+                                >
+                                  Hint: {question.hint}
+                                </p>
                                 <ul className="mt-3 space-y-2">
                                   {question.options.map((option) => (
                                     <li
@@ -860,8 +862,8 @@ export default function LessonDetailWithQuiz({ lessonId }) {
         message={
           <>
             Are you sure you want to delete this quiz question{" "}
-            <strong>{questionToDelete?.question_text}</strong>? This action cannot be
-            undone.
+            <strong>{questionToDelete?.question_text}</strong>? This action
+            cannot be undone.
           </>
         }
         confirmText="Delete Course"

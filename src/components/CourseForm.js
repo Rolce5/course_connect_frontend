@@ -34,7 +34,7 @@ export default function CourseForm({
 
   const navigate = useNavigate();
 
-  const MAX_SHORT_DESC = 1000; 
+  const MAX_SHORT_DESC = 2000; 
   const MAX_DESC = 10000;
 
   const [validationErrors, setValidationErrors] = useState({
@@ -133,6 +133,7 @@ export default function CourseForm({
         ? ""
         : Number(formData.pricing).toString()
     );
+
 
     // Append files separately
     if (imageFile) {
