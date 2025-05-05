@@ -60,30 +60,6 @@ export const getRecentEnrollments = async () => {
   }
 };
 
-// export const updateEnrollmentProgress = async ({
-//   enrollmentId,
-//   lastLessonId,
-//   progress,
-//   courseId,
-// }) => {
-//   try {
-//     const response = await apiClient.patch(
-//       `courses/enrollment/${courseId}/progress`,
-//       {
-//         lastLessonId,
-//         markComplete: progress === 100,
-//       }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error(
-//       "Failed to update enrollment progress",
-//       error.response?.data || error.message
-//     );
-//     throw error;
-//   }
-// };
-
 export const updateEnrollmentProgress = async ({ courseId, lastLessonId }) => {
   try {
     const response = await apiClient.patch(
@@ -97,5 +73,49 @@ export const updateEnrollmentProgress = async ({ courseId, lastLessonId }) => {
       error.response?.data || error.message
     );
     throw error;
+  }
+};
+
+export const checkLessonProgress = async (lessonId) => {
+  try {
+    // Replace with your actual endpoint that checks progress
+    const response = await apiClient.get(
+      `/courses/enrollment/lesson/${lessonId}/progress`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to fetch lesson progress",
+      error.response?.data || error.message
+    );
+    return { completed: false }; // Default value if API fails
+  }
+};
+
+export const completeLesson = async (lessonId) => {
+  try {
+    // Replace with your actual endpoint to mark lesson complete
+    const response = await apiClient.post(
+      `/courses/enrollment/lesson/${lessonId}/complete`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to complete lesson",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+export const getLessonProgressForCourse = async (courseId) => {
+  try {
+    const response = await apiClient.get(
+      `/courses/enrollment/${courseId}/lesson-progress`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching lesson progress:", error);
+    return [];
   }
 };

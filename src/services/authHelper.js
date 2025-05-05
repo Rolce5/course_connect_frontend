@@ -37,9 +37,9 @@ export const isInstructor = () => {
 };
 
 // Check if the user is a regular user
-export const isUser = () => {
+export const isStudent = () => {
     const role = localStorage.getItem('role');
-    return role === 'USER';
+    return role === 'STUDENT';
 };
 
 // Check if the user is admin and authenticated

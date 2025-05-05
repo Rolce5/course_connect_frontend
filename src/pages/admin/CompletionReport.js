@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from "react-helmet";
 import { FiCheckCircle, FiDownload, FiCalendar, FiBook, FiAward, FiUsers } from 'react-icons/fi';
 import {
   BarChart,
@@ -74,11 +75,18 @@ export default function CompletionReport() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Completion Report</title>
+      </Helmet>
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Completion Report</h1>
-          <p className="text-gray-500 mt-1">Track course completion and certification metrics</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Completion Report
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Track course completion and certification metrics
+          </p>
         </div>
         <div className="flex items-center space-x-4 mt-4 md:mt-0">
           <div className="flex items-center bg-white border border-gray-300 rounded-md px-3 py-2">
@@ -105,11 +113,17 @@ export default function CompletionReport() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Courses Started</p>
-              <p className="text-2xl font-semibold text-gray-900 mt-1">
-                {data.reduce((sum, item) => sum + item.started, 0).toLocaleString()}
+              <p className="text-sm font-medium text-gray-500">
+                Courses Started
               </p>
-              <p className="text-sm text-green-600 mt-2">+8.2% from last period</p>
+              <p className="text-2xl font-semibold text-gray-900 mt-1">
+                {data
+                  .reduce((sum, item) => sum + item.started, 0)
+                  .toLocaleString()}
+              </p>
+              <p className="text-sm text-green-600 mt-2">
+                +8.2% from last period
+              </p>
             </div>
             <div className="p-3 rounded-xl bg-indigo-100 text-indigo-600">
               <FiBook className="h-6 w-6" />
@@ -119,11 +133,17 @@ export default function CompletionReport() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Courses Completed</p>
-              <p className="text-2xl font-semibold text-gray-900 mt-1">
-                {data.reduce((sum, item) => sum + item.completed, 0).toLocaleString()}
+              <p className="text-sm font-medium text-gray-500">
+                Courses Completed
               </p>
-              <p className="text-sm text-green-600 mt-2">+12.5% from last period</p>
+              <p className="text-2xl font-semibold text-gray-900 mt-1">
+                {data
+                  .reduce((sum, item) => sum + item.completed, 0)
+                  .toLocaleString()}
+              </p>
+              <p className="text-sm text-green-600 mt-2">
+                +12.5% from last period
+              </p>
             </div>
             <div className="p-3 rounded-xl bg-green-100 text-green-600">
               <FiCheckCircle className="h-6 w-6" />
@@ -133,11 +153,19 @@ export default function CompletionReport() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Avg Completion Rate</p>
-              <p className="text-2xl font-semibold text-gray-900 mt-1">
-                {Math.round(data.reduce((sum, item) => sum + item.completionRate, 0) / data.length)}%
+              <p className="text-sm font-medium text-gray-500">
+                Avg Completion Rate
               </p>
-              <p className="text-sm text-green-600 mt-2">+3.1% from last period</p>
+              <p className="text-2xl font-semibold text-gray-900 mt-1">
+                {Math.round(
+                  data.reduce((sum, item) => sum + item.completionRate, 0) /
+                    data.length
+                )}
+                %
+              </p>
+              <p className="text-sm text-green-600 mt-2">
+                +3.1% from last period
+              </p>
             </div>
             <div className="p-3 rounded-xl bg-purple-100 text-purple-600">
               <FiAward className="h-6 w-6" />
@@ -149,19 +177,50 @@ export default function CompletionReport() {
       {/* Completion Over Time Chart */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
         <div className="p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Completion Rates Over Time</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
+            Completion Rates Over Time
+          </h2>
           <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#E5E7EB"
+                />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} />
                 <YAxis yAxisId="left" axisLine={false} tickLine={false} />
-                <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} domain={[0, 100]} />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  axisLine={false}
+                  tickLine={false}
+                  domain={[0, 100]}
+                />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="started" fill="#6366F1" name="Started" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="left" dataKey="completed" fill="#A5B4FC" name="Completed" radius={[4, 4, 0, 0]} />
-                <Line yAxisId="right" type="monotone" dataKey="completionRate" stroke="#10B981" strokeWidth={2} name="Completion Rate (%)" />
+                <Bar
+                  yAxisId="left"
+                  dataKey="started"
+                  fill="#6366F1"
+                  name="Started"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  yAxisId="left"
+                  dataKey="completed"
+                  fill="#A5B4FC"
+                  name="Completed"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="completionRate"
+                  stroke="#10B981"
+                  strokeWidth={2}
+                  name="Completion Rate (%)"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -173,7 +232,9 @@ export default function CompletionReport() {
         {/* Course Completion Breakdown */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Course Completion Breakdown</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              Course Completion Breakdown
+            </h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -186,13 +247,20 @@ export default function CompletionReport() {
                     paddingAngle={5}
                     dataKey="completionRate"
                     nameKey="name"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
                   >
                     {courseCompletionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, "Completion Rate"]} />
+                  <Tooltip
+                    formatter={(value) => [`${value}%`, "Completion Rate"]}
+                  />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
@@ -203,13 +271,18 @@ export default function CompletionReport() {
         {/* Top Completers */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Top Completers</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              Top Completers
+            </h2>
             <div className="space-y-4">
               {topCompleters.map((user) => (
-                <div key={user.id} className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                  <img 
-                    src={user.avatar} 
-                    alt={user.name} 
+                <div
+                  key={user.id}
+                  className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
                     className="w-10 h-10 rounded-full object-cover mr-4"
                   />
                   <div className="flex-1">
@@ -218,7 +291,9 @@ export default function CompletionReport() {
                   </div>
                   <div className="flex items-center">
                     <FiAward className="text-yellow-500 mr-1" />
-                    <span className="font-medium">{user.completed} courses</span>
+                    <span className="font-medium">
+                      {user.completed} courses
+                    </span>
                   </div>
                 </div>
               ))}
@@ -231,34 +306,40 @@ export default function CompletionReport() {
       </div>
 
       {/* Completion rate vs Enrollment */}
-       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Enrollment vs Completion</h2>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={completionData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar 
-                    dataKey="enrolled" 
-                    fill="#A5B4FC" 
-                    name="Enrolled" 
-                    radius={[4, 4, 0, 0]} 
-                  />
-                  <Bar 
-                    dataKey="completed" 
-                    fill="#6366F1" 
-                    name="Completed" 
-                    radius={[4, 4, 0, 0]} 
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
+            Enrollment vs Completion
+          </h2>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={completionData}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#E5E7EB"
+                />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="enrolled"
+                  fill="#A5B4FC"
+                  name="Enrolled"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="completed"
+                  fill="#6366F1"
+                  name="Completed"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
+      </div>
     </div>
   );
 }

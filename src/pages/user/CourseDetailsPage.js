@@ -149,10 +149,12 @@ const handleEnroll = async () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 {course.title}
               </h1>
-
-              <p className="text-lg text-gray-600 mb-6">
-                {course.shortDescription}
-              </p>
+              <div
+                className="text-lg text-gray-600 mb-6"
+                dangerouslySetInnerHTML={{
+                  __html: course.description,
+                }}
+              />
 
               <div className="flex items-center space-x-4 mb-6">
                 <div className="flex items-center">
@@ -179,13 +181,14 @@ const handleEnroll = async () => {
                     course.instructor?.profilePic ||
                     "https://www.gravatar.com/avatar/?d=mp&s=200'"
                   }
-                  alt={course.instructor?.name || "John Doe"}
+                  alt={course.instructor?.first_name || "John Doe"}
                   className="w-10 h-10 rounded-full"
                 />
                 <div>
                   <p className="text-sm text-gray-500">Created by</p>
                   <p className="font-medium">
-                    {course.instructor?.name || "John Doe"}
+                    {course.instructor?.first_name}{" "}
+                    {course.instructor?.last_name}
                   </p>
                 </div>
               </div>
@@ -204,7 +207,9 @@ const handleEnroll = async () => {
 
                   {isEnrolled ? (
                     <button
-                      onClick={() => navigate(`/${course.title}/${courseId}/learn`)}
+                      onClick={() =>
+                        navigate(`/${course.title}/${courseId}/learn`)
+                      }
                       className="w-full group relative overflow-hidden bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-4 px-6 rounded-xl shadow-lg hover:shadow-emerald-500/20 transition-all duration-300"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -236,7 +241,7 @@ const handleEnroll = async () => {
                           </div>
                         )}
                       </div>
-                     
+
                       <Button
                         onClick={handleEnroll}
                         disabled={isEnrolling}
@@ -355,26 +360,41 @@ const handleEnroll = async () => {
             {activeTab === "overview" && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">About This Course</h2>
-                <div className="prose max-w-none">{course.description}</div>
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: course.description,
+                  }}
+                />
 
-                <h3 className="text-xl font-bold mt-8 mb-4">
-                  What You'll Learn
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {course.learningOutcomes?.map((outcome, index) => (
-                    <div key={index} className="flex items-start">
-                      <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                      <span>{outcome}</span>
+                {course.learningOutcomes > 0 && (
+                  <div>
+                    <h3 className="text-xl font-bold mt-8 mb-4">
+                      What You'll Learn
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {course.learningOutcomes?.map((outcome, index) => (
+                        <div key={index} className="flex items-start">
+                          <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                          <span>{outcome}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
 
-                <h3 className="text-xl font-bold mt-8 mb-4">Requirements</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  {course.requirements?.map((req, index) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
+                {course.requirements > 0 && (
+                  <div>
+                    <h3 className="text-xl font-bold mt-8 mb-4">
+                      Requirements
+                    </h3>
+                    <ul className="list-disc pl-5 space-y-1">
+                      {course.requirements?.map((req, index) => (
+                        <li key={index}>{req}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
 
@@ -416,12 +436,9 @@ const handleEnroll = async () => {
                               </p>
                             </div>
                             {isEnrolled ? (
-                              
                               <button
                                 onClick={() =>
-                                  navigate(
-                                    `/${course.title}/${courseId}/learn`
-                                  )
+                                  navigate(`/${course.title}/${courseId}/learn`)
                                 }
                                 className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                               >

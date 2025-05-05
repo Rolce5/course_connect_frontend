@@ -111,6 +111,7 @@ export const getQuizAttempts = async (quizId) => {
   }
 };
 
+
 export const getNewQuizVersion = async (quizId) => {
   try {
     const response = await apiClient.get(`/quizzes/${quizId}/new-version`);

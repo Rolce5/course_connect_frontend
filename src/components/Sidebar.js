@@ -420,7 +420,10 @@ const Sidebar = ({
     }
   ];
 
-  const menuItems = userProfile?.role === 'ADMIN' ? adminMenu : studentMenu;
+  const menuItems =
+    userProfile?.role === "ADMIN" || userProfile?.role === "INSTRUCTOR"
+      ? adminMenu
+      : studentMenu;
 console.log("profile:", userProfile);
   const handleNavigation = (path) => {
     navigate(path);

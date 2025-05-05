@@ -11,16 +11,21 @@ export default function EditModulePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [module, setModule] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchModule = async () => {
       try {
         const module = await getModuleById(moduleId);
-        console.log(module)
         setModule(module);
       } catch (error) {
         console.error('Error:', error);
-        navigate(`/admin/courses/${courseId}/modules`, { replace: true });
+              setError(
+                error.response?.data?.message || "Failed to create module"
+              );
+
+        // navigate(`/admin/courses/${courseId}/modules`, { replace: true });
       } finally {
         setIsLoading(false)
       }
@@ -31,12 +36,16 @@ export default function EditModulePage() {
 
   const handleSubmit = async (moduleData) => {
     setIsSubmitting(true);
+    setError(null);
     try {
       await updateModule(moduleId, moduleData); // Now using the imported function
       navigate(`/admin/courses/${courseId}/modules`);
     } catch (error) {
+            setError(
+              error.response?.data?.message || "Failed to create module"
+            );
+
       console.error('Error:', error);
-      alert('Failed to update module');
     } finally {
       setIsSubmitting(false);
     }
@@ -64,15 +73,14 @@ export default function EditModulePage() {
       <div className="max-w-4xl mx-auto p-6">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900">Edit Module</h1>
-          <p className="mt-2 text-gray-600">
-            Update the module details below.
-          </p>
+          <p className="mt-2 text-gray-600">Update the module details below.</p>
         </div>
         <ModuleForm
           module={module} // Changed from existingModule to module
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
           onCancel={() => navigate(`/admin/courses/${courseId}/modules`)}
+          error={error}
         />
       </div>
     </div>

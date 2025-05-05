@@ -11,7 +11,7 @@ export default function CourseForm({
   course,
   onSubmit,
   isSubmitting,
-  error: serverError
+  error: serverError,
 }) {
   const [formData, setFormData] = useState({
     title: course?.title || "",
@@ -19,17 +19,20 @@ export default function CourseForm({
     description: course?.description || "",
     pricing: course?.pricing || null,
     duration: course?.duration || 0,
-    totalHours: course?.totalHours || 0,
+    totalHours: course?.total_hours || 0,
     category: course?.category || "",
     difficulty: course?.difficulty || "",
     imageUrl: course?.imageUrl || "",
     videoUrl: course?.videoUrl || "",
+    videoSource: course?.videoUrl ? "url" : "none", // 'url', 'file', or 'none'
     isActive: course?.is_active || false,
   });
 
   const [imagePreview, setImagePreview] = useState(course?.imageUrl || null);
   const [imageFile, setImageFile] = useState(null); // Store the image file
-  const navigate = useNavigate()
+  const [videoFile, setVideoFile] = useState(null); // Add this line with other state declarations
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -52,19 +55,52 @@ export default function CourseForm({
     }
   };
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setVideoFile(file);
+    }
+  };
+
+  const handleVideoSourceChange = (source) => {
+    setFormData({
+      ...formData,
+      videoSource: source,
+      videoUrl: source === "url" ? formData.videoUrl : "",
+    });
+    setVideoFile(null);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Create a new FormData instance
     const formDataToSend = new FormData();
 
-    // Append form data to FormData instance
-    Object.keys(formData).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
-    });
+    // Only append fields that exist in your DTO
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("shortDescription", formData.shortDescription);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("category", formData.category);
+    formDataToSend.append("difficulty", formData.difficulty);
+    formDataToSend.append("duration", formData.duration.toString());
+    formDataToSend.append("totalHours", formData.totalHours.toString());
+    formDataToSend.append("isActive", formData.isActive.toString());
 
-    // Append the image file if present
+    // Handle pricing (ensure it's a number or null)
+    formDataToSend.append(
+      "pricing",
+      formData.pricing === "" || formData.pricing === null
+        ? ""
+        : Number(formData.pricing).toString()
+    );
+
+    // Append files separately
     if (imageFile) {
       formDataToSend.append("files", imageFile);
+    }
+    if (formData.videoSource === "file" && videoFile) {
+      formDataToSend.append("files", videoFile);
+    } else if (formData.videoSource === "url" && formData.videoUrl) {
+      formDataToSend.append("videoUrl", formData.videoUrl);
     }
 
     onSubmit(formDataToSend);
@@ -84,15 +120,15 @@ export default function CourseForm({
       </div>
 
       {serverError && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-3 p-3 mb-6 bg-red-50 text-red-600 rounded-lg border border-red-100"
-            >
-              <FiAlertCircle className="flex-shrink-0" />
-              <span className="text-sm">{serverError}</span>
-            </motion.div>
-          )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-center gap-3 p-3 mb-6 bg-red-50 text-red-600 rounded-lg border border-red-100"
+        >
+          <FiAlertCircle className="flex-shrink-0" />
+          <span className="text-sm">{serverError}</span>
+        </motion.div>
+      )}
 
       {/* Basic Information Section */}
       <div className="bg-white shadow rounded-lg p-6">
@@ -137,7 +173,7 @@ export default function CourseForm({
 
         {/* Short Description */}
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          {/* <label className="block text-sm font-medium text-gray-700 mb-1">
             Short Description*
           </label>
           <textarea
@@ -148,12 +184,21 @@ export default function CourseForm({
             className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
             placeholder="A brief overview of the course"
             required
+          /> */}
+          <RichTextEditor
+            label="Short Description"
+            name="shortDescription" // Must match your formData key
+            value={formData.shortDescription}
+            onChange={handleChange} // Your existing handleChange function
+            required
+            menubar={true}
+            height={250}
           />
         </div>
 
         {/* Description */}
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          {/* <label className="block text-sm font-medium text-gray-700 mb-1">
             Detailed Description*
           </label>
           <textarea
@@ -164,6 +209,16 @@ export default function CourseForm({
             className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
             placeholder="What will students learn in this course?"
             required
+          /> */}
+          <RichTextEditor
+            label="Detailed Description
+"
+            name="description" // Must match your formData key
+            value={formData.description}
+            onChange={handleChange} // Your existing handleChange function
+            required
+            menubar={true}
+            height={250}
           />
         </div>
 
@@ -269,14 +324,62 @@ export default function CourseForm({
           </div>
 
           {/* Video URL */}
-          <Input
-            label="Promo Video URL"
-            name="videoUrl"
-            type="url"
-            value={formData.videoUrl}
-            onChange={handleChange}
-            placeholder="https://example.com/video.mp4"
-          />
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => handleVideoSourceChange("url")}
+                className={`px-4 py-2 rounded-md ${
+                  formData.videoSource === "url"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                Use URL
+              </button>
+              <button
+                type="button"
+                onClick={() => handleVideoSourceChange("file")}
+                className={`px-4 py-2 rounded-md ${
+                  formData.videoSource === "file"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                Upload File
+              </button>
+            </div>
+
+            {formData.videoSource === "url" && (
+              <Input
+                label="Video URL"
+                name="videoUrl"
+                type="url"
+                value={formData.videoUrl}
+                onChange={handleChange}
+                placeholder="https://example.com/video.mp4"
+              />
+            )}
+
+            {formData.videoSource === "file" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Video File
+                </label>
+                <input
+                  type="file"
+                  onChange={handleVideoChange}
+                  accept="video/*"
+                  className="mt-1 block w-full text-sm text-gray-500
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-md file:border-0
+          file:text-sm file:font-semibold
+          file:bg-indigo-50 file:text-indigo-700
+          hover:file:bg-indigo-100"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

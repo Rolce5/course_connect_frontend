@@ -87,7 +87,7 @@ export default function CourseDetailsPage() {
         >
           <FiArrowLeft className="mr-1" /> Back to Courses
         </Link>
-        
+
         <CourseStatusBadge isActive={course.isActive} />
       </div>
 
@@ -113,7 +113,13 @@ export default function CourseDetailsPage() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   {course.title}
                 </h1>
-                <p className="text-gray-600 mb-4">{course.shortDescription}</p>
+                <div
+                  className="text-gray-600 mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: course.short_description,
+                  }}
+                />
+
                 <div className="flex items-center mb-4">
                   <div className="flex items-center mr-4">
                     <FiStar className="text-yellow-400 mr-1" />
@@ -271,7 +277,12 @@ export default function CourseDetailsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2">
                 <h3 className="text-lg font-medium mb-2">Description</h3>
-                <p className="text-gray-700 mb-6">{course.description}</p>
+                <div
+                  className="text-gray-600 mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: course.description,
+                  }}
+                />
 
                 <h3 className="text-lg font-medium mb-2">Instructor</h3>
                 <div className="flex items-center mb-6">

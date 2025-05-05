@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from "react-helmet";
 import { FiTrendingUp, FiSearch, FiFilter, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import {
   BarChart,
@@ -85,8 +86,13 @@ export default function ProgressPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Progress</title>
+      </Helmet>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">Student Progress</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
+          Student Progress
+        </h1>
         <div className="relative max-w-md">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <FiSearch className="text-gray-400" />
@@ -101,24 +107,25 @@ export default function ProgressPage() {
         </div>
       </div>
 
+
       <div className="mb-6 border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
-            onClick={() => setActiveTab('overview')}
+            onClick={() => setActiveTab("overview")}
             className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'overview'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              activeTab === "overview"
+                ? "border-indigo-500 text-indigo-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
             }`}
           >
             Overview
           </button>
           <button
-            onClick={() => setActiveTab('detailed')}
+            onClick={() => setActiveTab("detailed")}
             className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'detailed'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              activeTab === "detailed"
+                ? "border-indigo-500 text-indigo-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
             }`}
           >
             Detailed View
@@ -126,7 +133,7 @@ export default function ProgressPage() {
         </nav>
       </div>
 
-      {activeTab === 'overview' ? (
+      {activeTab === "overview" ? (
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -135,9 +142,15 @@ export default function ProgressPage() {
                   <FiTrendingUp className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Active Students</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Active Students
+                  </p>
                   <p className="text-2xl font-semibold text-gray-900">
-                    {students.filter(s => s.totalProgress > 0 && s.totalProgress < 100).length}
+                    {
+                      students.filter(
+                        (s) => s.totalProgress > 0 && s.totalProgress < 100
+                      ).length
+                    }
                   </p>
                 </div>
               </div>
@@ -148,9 +161,17 @@ export default function ProgressPage() {
                   <FiTrendingUp className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Average Progress</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Average Progress
+                  </p>
                   <p className="text-2xl font-semibold text-gray-900">
-                    {Math.round(students.reduce((sum, student) => sum + student.totalProgress, 0) / students.length)}%
+                    {Math.round(
+                      students.reduce(
+                        (sum, student) => sum + student.totalProgress,
+                        0
+                      ) / students.length
+                    )}
+                    %
                   </p>
                 </div>
               </div>
@@ -161,9 +182,15 @@ export default function ProgressPage() {
                   <FiTrendingUp className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Completed Courses</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Completed Courses
+                  </p>
                   <p className="text-2xl font-semibold text-gray-900">
-                    {students.flatMap(s => s.courses).filter(c => c.progress === 100).length}
+                    {
+                      students
+                        .flatMap((s) => s.courses)
+                        .filter((c) => c.progress === 100).length
+                    }
                   </p>
                 </div>
               </div>
@@ -172,18 +199,36 @@ export default function ProgressPage() {
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Weekly Progress Trends</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Weekly Progress Trends
+              </h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={progressData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis yAxisId="left" orientation="left" stroke="#4f46e5" />
-                    <YAxis yAxisId="right" orientation="right" stroke="#10b981" />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      stroke="#10b981"
+                    />
                     <Tooltip />
                     <Legend />
-                    <Line yAxisId="left" type="monotone" dataKey="activeStudents" stroke="#4f46e5" name="Active Students" />
-                    <Line yAxisId="right" type="monotone" dataKey="avgProgress" stroke="#10b981" name="Avg Progress (%)" />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="activeStudents"
+                      stroke="#4f46e5"
+                      name="Active Students"
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="avgProgress"
+                      stroke="#10b981"
+                      name="Avg Progress (%)"
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -192,24 +237,69 @@ export default function ProgressPage() {
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Course Completion Rates</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Course Completion Rates
+              </h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={[
-                    { name: 'Advanced React', enrolled: 124, completed: 97, completionRate: 78 },
-                    { name: 'Python DS', enrolled: 98, completed: 64, completionRate: 65 },
-                    { name: 'UI/UX', enrolled: 76, completed: 62, completionRate: 82 },
-                    { name: 'Mobile Dev', enrolled: 112, completed: 78, completionRate: 70 },
-                  ]}>
+                  <BarChart
+                    data={[
+                      {
+                        name: "Advanced React",
+                        enrolled: 124,
+                        completed: 97,
+                        completionRate: 78,
+                      },
+                      {
+                        name: "Python DS",
+                        enrolled: 98,
+                        completed: 64,
+                        completionRate: 65,
+                      },
+                      {
+                        name: "UI/UX",
+                        enrolled: 76,
+                        completed: 62,
+                        completionRate: 82,
+                      },
+                      {
+                        name: "Mobile Dev",
+                        enrolled: 112,
+                        completed: 78,
+                        completionRate: 70,
+                      },
+                    ]}
+                  >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis yAxisId="left" orientation="left" stroke="#4f46e5" />
-                    <YAxis yAxisId="right" orientation="right" stroke="#10b981" domain={[0, 100]} />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      stroke="#10b981"
+                      domain={[0, 100]}
+                    />
                     <Tooltip />
                     <Legend />
-                    <Bar yAxisId="left" dataKey="enrolled" fill="#4f46e5" name="Enrolled" />
-                    <Bar yAxisId="left" dataKey="completed" fill="#8b5cf6" name="Completed" />
-                    <Line yAxisId="right" type="monotone" dataKey="completionRate" stroke="#10b981" name="Completion Rate (%)" />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="enrolled"
+                      fill="#4f46e5"
+                      name="Enrolled"
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="completed"
+                      fill="#8b5cf6"
+                      name="Completed"
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="completionRate"
+                      stroke="#10b981"
+                      name="Completion Rate (%)"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -219,17 +309,26 @@ export default function ProgressPage() {
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Student Progress Details</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              Student Progress Details
+            </h2>
             {filteredStudents.length > 0 ? (
               <div className="space-y-6">
-                {filteredStudents.map(student => (
-                  <div key={student.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                {filteredStudents.map((student) => (
+                  <div
+                    key={student.id}
+                    className="border border-gray-200 rounded-lg overflow-hidden"
+                  >
                     <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium">{student.name}</h3>
                         <div className="flex items-center">
-                          <span className="text-sm font-medium mr-4">Overall Progress: {student.totalProgress}%</span>
-                          <span className="text-sm text-gray-600">Avg Time: {student.avgTimeSpent}</span>
+                          <span className="text-sm font-medium mr-4">
+                            Overall Progress: {student.totalProgress}%
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            Avg Time: {student.avgTimeSpent}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -238,13 +337,17 @@ export default function ProgressPage() {
                         <div key={index} className="px-6 py-4">
                           <div className="flex justify-between items-center mb-2">
                             <span className="font-medium">{course.name}</span>
-                            <span className="text-sm text-gray-500">Last activity: {course.lastActivity}</span>
+                            <span className="text-sm text-gray-500">
+                              Last activity: {course.lastActivity}
+                            </span>
                           </div>
                           <div className="flex items-center">
                             <div className="w-full mr-4">
                               {progressBar(course.progress)}
                             </div>
-                            <span className="text-sm font-medium">{course.progress}%</span>
+                            <span className="text-sm font-medium">
+                              {course.progress}%
+                            </span>
                           </div>
                         </div>
                       ))}
@@ -255,9 +358,13 @@ export default function ProgressPage() {
             ) : (
               <div className="text-center py-12">
                 <FiTrendingUp className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-lg font-medium text-gray-900">No students found</h3>
+                <h3 className="mt-2 text-lg font-medium text-gray-900">
+                  No students found
+                </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  {searchTerm ? 'Try a different search term' : 'No student progress data available'}
+                  {searchTerm
+                    ? "Try a different search term"
+                    : "No student progress data available"}
                 </p>
               </div>
             )}

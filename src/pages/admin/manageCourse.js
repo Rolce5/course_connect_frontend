@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import {
   FiEdit2,
   FiTrash2,
@@ -66,13 +67,22 @@ export default function CourseListPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
+      <Helmet>
+        <title>Courses</title>
+      </Helmet>
       {/* Delete Confirmation Modal */}
       <ConfirmModal
         isOpen={!!courseToDelete}
         onClose={() => setCourseToDelete(null)}
         onConfirm={() => handleDelete(courseToDelete?.id)}
         title="Confirm Deletion"
-        message={`Are you sure you want to delete the course "${courseToDelete?.title}"? This action cannot be undone.`}
+        message={
+          <>
+            Are you sure you want to delete the course{" "}
+            <strong>{courseToDelete?.title}</strong>? This will also delete all
+            modules in this course with it's associated lessons.
+          </>
+        }
         confirmText="Delete Course"
         isProcessing={isDeleting}
         danger={true}
@@ -175,9 +185,13 @@ export default function CourseListPage() {
                             <div className="text-sm font-semibold text-gray-900">
                               {course.title}
                             </div>
-                            <div className="text-sm text-gray-500 line-clamp-1">
-                              {course.description}
-                            </div>
+
+                            <div
+                              className="text-sm text-gray-500 line-clamp-1"
+                              dangerouslySetInnerHTML={{
+                                __html: course.short_description,
+                              }}
+                            />
                           </div>
                         </div>
                       </td>
@@ -246,5 +260,5 @@ export default function CourseListPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

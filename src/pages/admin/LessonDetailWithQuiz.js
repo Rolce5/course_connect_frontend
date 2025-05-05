@@ -31,7 +31,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
   const [quizFormData, setQuizFormData] = useState({
     title: "",
-    description: "",
+    hint: "",
     lessonId: lesson.id, // Add this
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -268,7 +268,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                 <div className="lg:col-span-2 space-y-6">
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                      Description <div>{lesson.id} drhf</div>
+                       <div>{lesson.title} </div>
                     </h2>
                     <div
                       className="prose prose-indigo max-w-none"
@@ -381,7 +381,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                           onClick={() => {
                             setQuizFormData({
                               title: quiz.title,
-                              description: quiz.description,
+                              hint: quiz.hint,
                             });
                             setIsCreatingQuiz(true);
                           }}
@@ -757,15 +757,15 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                 {/* Quiz Description */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Description
+                    Hint
                   </label>
                   <div className="relative">
                     <textarea
-                      value={quizFormData.description}
+                      value={quizFormData.hint}
                       onChange={(e) =>
                         setQuizFormData({
                           ...quizFormData,
-                          description: e.target.value,
+                          hint: e.target.value,
                         })
                       }
                       rows={3}

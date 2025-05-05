@@ -359,9 +359,13 @@ export default function ManageModulesPage() {
                           {module.title}
                         </h2>
                         {module.description && (
-                          <p className="mt-2 text-gray-600">
-                            {module.description}
-                          </p>
+                         
+                          <div
+                            className="mt-2 text-gray-600"
+                            dangerouslySetInnerHTML={{
+                              __html: module.description,
+                            }}
+                          />
                         )}
                       </div>
                       {!isReorderMode && (
@@ -462,7 +466,7 @@ export default function ManageModulesPage() {
                     <div className="flex items-center text-sm text-gray-500">
                       <span>
                         Last updated:{" "}
-                        {new Date(module.updatedAt).toLocaleDateString()}
+                        {new Date(module.updated_at).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex space-x-3">

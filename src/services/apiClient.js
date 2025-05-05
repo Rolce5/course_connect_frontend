@@ -101,6 +101,7 @@ const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
   headers: { "Content-Type": "application/json" },
   withCredentials: true, // For HTTP-only cookies
+  timeout: 60000, // 60 seconds (default is usually 5-10s)
 });
 
 // Request interceptor
@@ -132,4 +133,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export default apiClient

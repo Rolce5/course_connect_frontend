@@ -57,6 +57,10 @@ export default function LoginForm() {
     if (!validateForm()) return;
 
     setLoading(true);
+     setErrors((prev) => ({
+       ...prev,
+       general:"",
+     }));
     try {
       const credentials = {
         email: formData.email,
@@ -70,8 +74,12 @@ export default function LoginForm() {
       localStorage.setItem("token", response.access_token);
       localStorage.setItem("role", response.role); // Store the role (admin/user)
 
-      // Redirect to a common route (e.g., /dashboard)
-      navigate("/dashboard");
+      if (response.role == "STUDENT") {
+        navigate("/student/learning");
+      } else {
+        navigate("/admin/dashboard");
+      }
+        // Redirect to a common route (e.g., /dashboard)
     } catch (error) {
       console.error("Login failed:", error);
       setErrors((prev) => ({
@@ -155,7 +163,7 @@ export default function LoginForm() {
             </Link>
           </div>
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
@@ -183,7 +191,7 @@ export default function LoginForm() {
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
         </motion.div>
       </div>
     </>

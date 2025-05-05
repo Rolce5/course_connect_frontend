@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Helmet } from "react-helmet";
 import { FiAward, FiSearch, FiDownload, FiPrinter, FiCheckCircle, FiXCircle, FiFilter, FiChevronUp, FiChevronDown } from 'react-icons/fi';
 
 export default function CertificatesPage() {
@@ -83,11 +84,16 @@ export default function CertificatesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Certificates</title>
+      </Helmet>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">Certificates</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
+          Certificates
+        </h1>
         <div className="flex items-center space-x-4">
           <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-            {certificates.filter(c => c.status === 'issued').length} Issued
+            {certificates.filter((c) => c.status === "issued").length} Issued
           </div>
           <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
             <FiDownload className="mr-2" />
@@ -239,11 +245,11 @@ export default function CertificatesPage() {
           )}
         </div>
       </div> */}
-             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-       <div className="p-6">
-         <div className="mb-6">
-           <div className="relative max-w-md">
-               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+        <div className="p-6">
+          <div className="mb-6">
+            <div className="relative max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FiSearch className="text-gray-400" />
               </div>
               <input
@@ -255,7 +261,7 @@ export default function CertificatesPage() {
               />
             </div>
           </div>
-           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FiSearch className="text-gray-400" />
@@ -285,26 +291,26 @@ export default function CertificatesPage() {
                 <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                   <div className="py-1">
                     <button
-                      onClick={() => setActiveFilter('all')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'all' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                      onClick={() => setActiveFilter("all")}
+                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === "all" ? "bg-gray-100 text-gray-900" : "text-gray-700"}`}
                     >
                       All Certificates
                     </button>
                     <button
-                      onClick={() => setActiveFilter('issued')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'issued' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                      onClick={() => setActiveFilter("issued")}
+                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === "issued" ? "bg-gray-100 text-gray-900" : "text-gray-700"}`}
                     >
                       Issued
                     </button>
                     <button
-                      onClick={() => setActiveFilter('pending')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'pending' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                      onClick={() => setActiveFilter("pending")}
+                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === "pending" ? "bg-gray-100 text-gray-900" : "text-gray-700"}`}
                     >
                       Pending
                     </button>
                     <button
-                      onClick={() => setActiveFilter('revoked')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'revoked' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                      onClick={() => setActiveFilter("revoked")}
+                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === "revoked" ? "bg-gray-100 text-gray-900" : "text-gray-700"}`}
                     >
                       Revoked
                     </button>
@@ -313,28 +319,46 @@ export default function CertificatesPage() {
               )}
             </div>
           </div>
-          
+
           {filteredCertificates.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Certificate ID
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       User
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Course
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Awarded On
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Status
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -356,7 +380,8 @@ export default function CertificatesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={statusBadge(certificate.status)}>
-                          {certificate.status.charAt(0).toUpperCase() + certificate.status.slice(1)}
+                          {certificate.status.charAt(0).toUpperCase() +
+                            certificate.status.slice(1)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -375,9 +400,13 @@ export default function CertificatesPage() {
           ) : (
             <div className="text-center py-12">
               <FiAward className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-lg font-medium text-gray-900">No certificates found</h3>
+              <h3 className="mt-2 text-lg font-medium text-gray-900">
+                No certificates found
+              </h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchTerm ? 'Try a different search term' : 'No certificates have been issued yet'}
+                {searchTerm
+                  ? "Try a different search term"
+                  : "No certificates have been issued yet"}
               </p>
             </div>
           )}
@@ -388,7 +417,9 @@ export default function CertificatesPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Certificates</p>
+              <p className="text-sm font-medium text-gray-500">
+                Total Certificates
+              </p>
               <p className="text-2xl font-semibold text-gray-900">
                 {certificates.length}
               </p>
@@ -401,9 +432,17 @@ export default function CertificatesPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Issued This Month</p>
+              <p className="text-sm font-medium text-gray-500">
+                Issued This Month
+              </p>
               <p className="text-2xl font-semibold text-gray-900">
-                {certificates.filter(c => c.status === 'issued' && c.issuedDate.startsWith('2023-05')).length}
+                {
+                  certificates.filter(
+                    (c) =>
+                      c.status === "issued" &&
+                      c.issuedDate.startsWith("2023-05")
+                  ).length
+                }
               </p>
             </div>
             <div className="p-3 rounded-full bg-green-100 text-green-600">
@@ -414,9 +453,11 @@ export default function CertificatesPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pending Approval</p>
+              <p className="text-sm font-medium text-gray-500">
+                Pending Approval
+              </p>
               <p className="text-2xl font-semibold text-gray-900">
-                {certificates.filter(c => c.status === 'pending').length}
+                {certificates.filter((c) => c.status === "pending").length}
               </p>
             </div>
             <div className="p-3 rounded-full bg-yellow-100 text-yellow-600">

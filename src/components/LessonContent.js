@@ -9,16 +9,6 @@ const LessonContent = ({
   setNotes,
   handleNoteSave,
   handleVideoEnded,
-  quizCompleted,
-  currentQuiz,
-  quizScore,
-  bestScore,
-  quizAttempts,
-  weakTopics,
-  attemptsLeft,
-  selectedAnswers,
-  courseId,
-  prepareQuizRetake,
 }) => {
   const [isSaving, setIsSaving] = useState(false);
 
@@ -28,14 +18,15 @@ const LessonContent = ({
     setIsSaving(false);
   };
 
+  
   return (
     <div className="flex-1 overflow-y-auto p-4 lg:p-6 bg-white">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-xl lg:text-2xl font-bold mb-4">
-          {currentLesson.title}
+          {currentLesson?.title}
         </h1>
 
-        {currentLesson.videoUrl && (
+        {currentLesson?.videoUrl && (
           <div className="mb-6 aspect-w-16 aspect-h-9 bg-black rounded-lg overflow-hidden">
             <video
               controls
@@ -43,30 +34,16 @@ const LessonContent = ({
               onEnded={handleVideoEnded}
               autoPlay
             >
-              <source src={currentLesson.videoUrl} type="video/mp4" />
+              <source src={currentLesson?.videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
         )}
 
-        {quizCompleted && (
-          <QuizReviewSection
-            quizScore={quizScore}
-            bestScore={bestScore}
-            quizAttempts={quizAttempts}
-            weakTopics={weakTopics}
-            currentQuiz={currentQuiz}
-            selectedAnswers={selectedAnswers}
-            attemptsLeft={attemptsLeft}
-            courseId={courseId}
-            prepareQuizRetake={prepareQuizRetake}
-          />
-        )}
-
         <div className="mb-6 lg:mb-8 h-[70vh] overflow-y-auto">
           <div
             className="prose max-w-none w-full text-left"
-            dangerouslySetInnerHTML={{ __html: currentLesson.content }}
+            dangerouslySetInnerHTML={{ __html: currentLesson?.content }}
           />
         </div>
 

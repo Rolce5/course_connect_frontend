@@ -15,7 +15,9 @@ export const getModuleLessons = async (moduleId) => {
 
 export const getHighestLessonOrder = async (moduleId) => {
     try {
-      const response = await apiClient.get(`/lessons/${moduleId}`);
+      const response = await apiClient.get(
+        `/lessons/${moduleId}/highest-order`
+      );
       return response.data;
     } catch (error) {
       console.error(
@@ -26,7 +28,7 @@ export const getHighestLessonOrder = async (moduleId) => {
     }
   };
   
-  export const createLesson = async (lessonData) => {
+export const createLesson = async (lessonData) => {
     try {
       const response = await apiClient.post(`/lessons`, lessonData, {
       headers: { "Content-Type": "multipart/form-data" }, // Content-type for file upload
@@ -44,7 +46,13 @@ export const getHighestLessonOrder = async (moduleId) => {
   
   export const updateLesson = async (lessonId, lessonData) => {
     try {
-      const response = await apiClient.put(`/lessons/${lessonId}`, lessonData);
+      const response = await apiClient.patch(
+        `/lessons/${lessonId}`,
+        lessonData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error(

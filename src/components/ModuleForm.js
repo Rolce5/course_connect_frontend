@@ -58,22 +58,24 @@ export default function ModuleForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+      const submissionData = isEditMode
+        ? (({ courseId, ...rest }) => rest)(formData)
+        : formData;
+
+
+    onSubmit(submissionData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
       {/* Header Section */}
       <div className="space-y-2">
-
         <div className="flex items-center gap-3">
           {isEditMode ? (
             <FiEdit2 className="h-6 w-6 text-indigo-600" />
           ) : (
             <FiPlus className="h-6 w-6 text-indigo-600" />
           )}
-
-
         </div>
       </div>
 
@@ -85,15 +87,15 @@ export default function ModuleForm({
             Module Details
           </h3>
           {serverError && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-3 p-3 mb-6 bg-red-50 text-red-600 rounded-lg border border-red-100"
-          >
-            <FiAlertCircle className="flex-shrink-0" />
-            <span className="text-sm">{serverError}</span>
-          </motion.div>
-        )}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-3 p-3 mb-6 bg-red-50 text-red-600 rounded-lg border border-red-100"
+            >
+              <FiAlertCircle className="flex-shrink-0" />
+              <span className="text-sm">{serverError}</span>
+            </motion.div>
+          )}
 
           <div className="space-y-5">
             {/* Title */}
@@ -108,31 +110,15 @@ export default function ModuleForm({
               className="focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
 
-{/* <RichTextEditor
+            <RichTextEditor
               label="Description"
+              name="description" 
               menubar={true}
               height="250"
               value={formData.description}
-              onChange={(description) =>
-                setFormData({ ...formData, description })
-              }
+              onChange={handleChange}
               placeholder="What will students learn in this module?"
-
-            /> */}
-            {/* Description */}
-            <div className="space-y-1">
-              <label className="block text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={4}
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
-                placeholder="What will students learn in this module?"
-              />
-            </div>
+            />      
 
             {/* Duration & Order */}
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -181,7 +167,7 @@ export default function ModuleForm({
           >
             Cancel
           </Button>
-         
+
           <Button
             isLoading={isSubmitting}
             type="submit"

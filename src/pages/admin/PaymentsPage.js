@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Helmet } from "react-helmet";
 import { FiDollarSign, FiSearch, FiFilter, FiChevronDown, FiChevronUp, FiDownload } from 'react-icons/fi';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { getPayments } from '../../services/paymentService';
@@ -199,6 +200,9 @@ export default function PaymentsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Payments</title>
+      </Helmet>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
           Payments

@@ -14,7 +14,7 @@ CourseConnect is a full-stack Learning Management System (LMS) designed for crea
 - Axios for API requests
 - React Router for routing
 - JWT for user authentication
-- Vercel/Netlify for deployment
+//- Vercel/Netlify for deployment
 
 
 

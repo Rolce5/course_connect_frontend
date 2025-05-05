@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Helmet } from "react-helmet";
 import { FiPlus, FiEdit2, FiTrash2, FiEye } from 'react-icons/fi';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import LessonModal from '../../components/LessonModal';
-import { createLesson, deleteLesson, updateLesson, getModuleLessons } from '../../services/lessonService';
+import { createLesson, deleteLesson, updateLesson, getModuleLessons, getHighestLessonOrder } from '../../services/lessonService';
 import { getModuleById } from '../../services/moduleService';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ConfirmModal from '../../components/ConfirmModal'; // Import the ConfirmModal
@@ -18,6 +19,7 @@ export default function CourseLessonsPage() {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false); // State for delete modal
   const [lessonToDelete, setLessonToDelete] = useState(null); // Track which lesson to delete
+  const [highestOrder, setHighestOrder] = useState(null); // Track which lesson to delete
 
   useEffect(() => {
     if (!moduleId) return;
@@ -45,29 +47,35 @@ export default function CourseLessonsPage() {
     fetchData();
   }, [moduleId, navigate]);
 
-  const handleAddLesson = async (lessonData) => {
+
+  const handleAddLesson = async (formData) => {
     try {
-      const newLesson = await createLesson(lessonData);
+      const newLesson = await createLesson(formData);
       setLessons([...lessons, newLesson]);
       setShowModal(false);
     } catch (error) {
-      console.error('Error:', error);
-      setError(error.message || 'Failed to add lesson');
+      console.error("Error:", error);
+      setError(error.message || "Failed to add lesson");
     }
   };
 
-  const handleUpdateLesson = async (updatedLesson) => {
+  const handleUpdateLesson = async (formData) => {
     try {
-      const updated = await updateLesson(updatedLesson.id, updatedLesson);
-      setLessons(lessons.map(l => l.id === updated.id ? updated : l));
+      // moduleId is excluded from formData during update
+      const lessonId = editingLesson?.id;
+      const updatedLesson = await updateLesson(lessonId, formData);
+      setLessons(
+        lessons.map((lesson) =>
+          lesson.id === updatedLesson.id ? updatedLesson : lesson
+        )
+      );
       setShowModal(false);
-      setEditingLesson(null);
     } catch (error) {
-      console.error('Error:', error);
-      setError(error.message || 'Failed to update lesson');
+      console.error("Error:", error);
+      setError(error.message || "Failed to update lesson");
     }
   };
-
+  
   const handleDeleteConfirmation = (lessonId) => {
     const lesson = lessons.find(l => l.id === lessonId);
     setLessonToDelete(lesson);
@@ -94,6 +102,9 @@ export default function CourseLessonsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Lessons</title>
+      </Helmet>
       <div className="flex flex-col space-y-6">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
@@ -101,7 +112,12 @@ export default function CourseLessonsPage() {
             <h1 className="text-3xl font-bold text-gray-900">
               Lessons for {module.title}
             </h1>
-            <p className="mt-1 text-gray-600">{module.description}</p>
+            <div
+              className="mt-1 text-gray-600"
+              dangerouslySetInnerHTML={{
+                __html: module.description,
+              }}
+            />
           </div>
           <div className="flex space-x-3">
             <Link

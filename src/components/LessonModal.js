@@ -13,7 +13,7 @@ export default function LessonModal({
   lessons = [],
 }) {
   const [formData, setFormData] = useState({
-    id: lesson?.id || null,
+    lessonId: lesson?.id || null,
     title: lesson?.title || "",
     description: lesson?.description || "",
     content: lesson?.content || "",
@@ -23,13 +23,32 @@ export default function LessonModal({
     videoUrl: lesson?.videoUrl || "",
   });
 
-  console.log(formData.order);
-
   const [videoPreview, setVideoPreview] = useState(lesson?.videoUrl || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    if (!lesson) {
+      // Only for new lessons, not edits
+      const fetchHighestOrder = async () => {
+        try {
+          const highestOrder = await getHighestLessonOrder(moduleId);
+          console.log("Highest order: ",highestOrder);
+          setFormData((prev) => ({
+            ...prev,
+            order: highestOrder + 1, // Set to highest order + 1
+          }));
+        } catch (error) {
+          console.error("Failed to fetch highest order:", error);
+          // Fallback to order 1 if fetch fails
+          setFormData((prev) => ({ ...prev, order: 1 }));
+        }
+      };
+      fetchHighestOrder();
+    }
+  }, [moduleId, lesson]); // Only run when moduleId or lesson changes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,31 +73,46 @@ export default function LessonModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-
-    // Convert all values to strings and handle null/undefined
-    Object.keys(formData).forEach((key) => {
-      if (key !== "videoUrl" || !videoFile) {
-        const value = formData[key] === null ? "" : formData[key];
-        formDataToSend.append(key, String(value));
-      }
-    });
-
-    if (videoFile) {
-      formDataToSend.append("files", videoFile);
-    }
+    setIsSubmitting(true);
+    setError(null);
 
     try {
-      setIsSubmitting(true);
+      const formDataToSend = new FormData();
+
+      // Common fields for both create and update
+      const fields = ["title", "description", "content", "duration", "order"];
+
+      fields.forEach((field) => {
+        formDataToSend.append(field, formData[field] || "");
+      });
+
+      // Only include moduleId when creating (not updating)
+      if (!lesson) {
+        // If lesson doesn't exist (creating new)
+        formDataToSend.append("moduleId", formData.moduleId);
+      }
+
+      // Handle video
+      if (videoFile) {
+        formDataToSend.append("files", videoFile);
+        formDataToSend.append("videoUrl", "");
+      } else {
+        formDataToSend.append("videoUrl", formData.videoUrl || "");
+      }
+
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(key, value);
+      }
+
       await onSubmit(formDataToSend);
+      onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
-      setError("Failed to save lesson. Please try again.");
+      setError(error.message || "Failed to save lesson. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -104,7 +138,6 @@ export default function LessonModal({
               </div>
             </div>
           )}
-
           <div>
             <Input
               label="Lesson Title"
@@ -128,6 +161,16 @@ export default function LessonModal({
               required
               className="block !border-gray-300 !rounded-md shadow-sm !p-2"
             />
+            {/* <Input
+              label="Order"
+              name="order"
+              type="number"
+              value={formData.order || ""}
+              onChange={handleChange}
+              placeholder=""
+              required
+              className="block !border-gray-300 !rounded-md shadow-sm !p-2"
+            /> */}
             <Input
               label="Order"
               name="order"
@@ -137,18 +180,20 @@ export default function LessonModal({
               placeholder=""
               required
               className="block !border-gray-300 !rounded-md shadow-sm !p-2"
+              // readOnly={!lesson} // Make read-only for new lessons
+              disabled={!lesson}
             />
           </div>
 
           <div>
             <RichTextEditor
               label="Description"
-              menubar={true}
-              height="250"
+              name="description"
               value={formData.description}
-              onChange={(description) =>
-                setFormData({ ...formData, description })
-              }
+              onChange={handleChange}
+              required
+              menubar={true}
+              height={250}
             />
           </div>
 
@@ -174,7 +219,7 @@ export default function LessonModal({
                 {videoPreview ? "Change Video" : "Upload Video"}
                 <input
                   type="file"
-                  name="file-upload"
+                  name="video"
                   className="sr-only"
                   onChange={handleVideoChange}
                   accept="video/*"
@@ -197,10 +242,13 @@ export default function LessonModal({
 
           <div>
             <RichTextEditor
-              label="Content*"
-              menubar={true}
+              label="Content"
+              name="content" // Must match your formData key
               value={formData.content}
-              onChange={(content) => setFormData({ ...formData, content })}
+              onChange={handleChange} // Your existing handleChange function
+              required
+              menubar={true}
+              height={250}
             />
           </div>
 

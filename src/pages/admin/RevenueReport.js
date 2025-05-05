@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from "react-helmet";
 import { FiBarChart2, FiDollarSign, FiUsers, FiCheckCircle, FiDownload, FiTrendingUp, FiBook, FiAward } from 'react-icons/fi';
 import {
   BarChart,
@@ -352,12 +353,19 @@ export default function ReportsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Revenue Report</title>
+      </Helmet>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports Dashboard</h1>
-          <p className="text-gray-500 mt-1">Track and analyze your platform performance</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Reports Dashboard
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Track and analyze your platform performance
+          </p>
         </div>
-        <motion.button 
+        <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

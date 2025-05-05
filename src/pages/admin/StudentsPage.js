@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { FiUsers, FiSearch, FiFilter, FiChevronDown, FiChevronUp, FiEdit2, FiTrash2, FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { getStudents } from '../../services/userService';
+import { Helmet } from "react-helmet";
+
 
 export default function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -78,6 +80,9 @@ export default function StudentsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>Students</title>
+      </Helmet>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
           All Students
@@ -228,14 +233,20 @@ export default function StudentsPage() {
                           ).length
                         }
                       </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-  {new Date(
-    Math.max(
-      ...(student.enrollments || []).map(e => new Date(e.updatedAt).getTime()),
-      new Date(student.updatedAt).getTime()
-    )
-  ).toISOString().split('T')[0]}
-</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {
+                          new Date(
+                            Math.max(
+                              ...(student.enrollments || []).map((e) =>
+                                new Date(e.updatedAt).getTime()
+                              ),
+                              new Date(student.updatedAt).getTime()
+                            )
+                          )
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button className="text-indigo-600 hover:text-indigo-900 mr-4">
                           <FiEdit2 />
