@@ -11,3 +11,15 @@ export const getDashboard = async () => {
     );
   }
 };
+
+export const getSidebarBadgeCounts = async () => {
+  try {
+    const response = await apiClient.get("/dashboard/badge-counts");
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to fetching sidebar badges number",
+      error.response?.data || error.message
+    );
+  }
+};

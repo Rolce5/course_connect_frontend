@@ -1116,24 +1116,24 @@ const LearningPage = () => {
   //     handleCertificateGeneration();
   //   }
   // }, [enrollment?.status, courseId, navigate]);
-  useEffect(() => {
-    if (enrollment?.status === "COMPLETED") {
-      const handleCertificateGeneration = async () => {
-        try {
-          const certificate = await generateCertificate(courseId);
-          console.log("Certificate: ", certificate);
-          // toast.success("Certificate generated successfully!", {
-          // onClick: () =>
-          navigate(`/certificates/${certificate.id}`);
-          // });
-        } catch (error) {
-          console.error("Certificate generation failed:", error);
-          toast.error("Failed to generate certificate");
-        }
-      };
-      handleCertificateGeneration();
-    }
-  }, [enrollment?.status, courseId, navigate]);
+  // useEffect(() => {
+  //   if (enrollment?.status === "COMPLETED") {
+  //     const handleCertificateGeneration = async () => {
+  //       try {
+  //         const certificate = await generateCertificate(courseId);
+  //         console.log("Certificate: ", certificate);
+  //         // toast.success("Certificate generated successfully!", {
+  //         // onClick: () =>
+  //         navigate(`/certificates/${certificate.id}`);
+  //         // });
+  //       } catch (error) {
+  //         console.error("Certificate generation failed:", error);
+  //         toast.error("Failed to generate certificate");
+  //       }
+  //     };
+  //     handleCertificateGeneration();
+  //   }
+  // }, [enrollment?.status, courseId, navigate]);
 
   const handleNoteSave = useCallback(async () => {
     try {

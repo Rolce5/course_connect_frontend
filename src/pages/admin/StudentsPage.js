@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FiUsers, FiSearch, FiFilter, FiChevronDown, FiChevronUp, FiEdit2, FiTrash2, FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { getStudents } from '../../services/userService';
+import { getLastActiveDate } from "../../utils/dateUtils";
 import { Helmet } from "react-helmet";
 
 
@@ -234,19 +235,9 @@ export default function StudentsPage() {
                         }
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {
-                          new Date(
-                            Math.max(
-                              ...(student.enrollments || []).map((e) =>
-                                new Date(e.updatedAt).getTime()
-                              ),
-                              new Date(student.updatedAt).getTime()
-                            )
-                          )
-                            .toISOString()
-                            .split("T")[0]
-                        }
+                        {getLastActiveDate(student)}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button className="text-indigo-600 hover:text-indigo-900 mr-4">
                           <FiEdit2 />

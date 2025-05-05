@@ -215,7 +215,7 @@ const CertificateViewer = () => {
           Download Certificate
         </button>
       </div>
-
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum deleniti magnam explicabo vel alias sit voluptatum dignissimos. Aliquid, quo eligendi magnam assumenda dicta doloremque ea officia. Esse eveniet officia officiis!
       {/* {pdfUrl && (
         <div className="border rounded-lg overflow-hidden">
           <PDFViewer width="100%" height="600px">

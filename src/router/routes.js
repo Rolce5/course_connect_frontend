@@ -39,6 +39,9 @@ import SettingsPage from "../pages/SettingsPage";
 import QuizManagementPage from "../pages/admin/QuizManagementPage";
 import LessonDetailWithQuiz from "../pages/admin/LessonDetailWithQuiz";
 import CertificateViewer from "../pages/user/CertificateView";
+import AllInstructorsPage from "../pages/admin/AllInstructorsPage";
+import AddInstructorPage from "../pages/admin/AddInstructorPage";
+import InstructorPerformancePage from "../pages/admin/InstructorPerformancePage";
 
 const routes = createBrowserRouter([
   {
@@ -186,6 +189,18 @@ const routes = createBrowserRouter([
           {
             path: "/admin/students/all",
             element: <StudentsPage />,
+          },
+          {
+            path: "/admin/instructors/all",
+            element: <AllInstructorsPage />,
+          },
+          {
+            path: "/admin/instructors/new",
+            element: <AddInstructorPage />,
+          },
+          {
+            path: "/admin/instructors/performance",
+            element: <InstructorPerformancePage />,
           },
           {
             path: "/admin/payments",

@@ -102,165 +102,8 @@ export default function CertificatesPage() {
         </div>
       </div>
 
-      {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-        <div className="p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiSearch className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search certificates..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <button
-                onClick={() => setFiltersOpen(!filtersOpen)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <FiFilter className="mr-2" />
-                Filters
-                {filtersOpen ? (
-                  <FiChevronUp className="ml-2" />
-                ) : (
-                  <FiChevronDown className="ml-2" />
-                )}
-              </button>
-              {filtersOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                  <div className="py-1">
-                    <button
-                      onClick={() => setActiveFilter('all')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'all' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
-                    >
-                      All Certificates
-                    </button>
-                    <button
-                      onClick={() => setActiveFilter('issued')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'issued' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
-                    >
-                      Issued
-                    </button>
-                    <button
-                      onClick={() => setActiveFilter('pending')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'pending' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
-                    >
-                      Pending
-                    </button>
-                    <button
-                      onClick={() => setActiveFilter('revoked')}
-                      className={`block px-4 py-2 text-sm w-full text-left ${activeFilter === 'revoked' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
-                    >
-                      Revoked
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {filteredCertificates.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Certificate ID
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Student
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Course
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Issued Date
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredCertificates.map((certificate) => (
-                    <tr key={certificate.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {certificate.certificateId}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {certificate.student}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {certificate.course}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {certificate.issuedDate}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {statusBadge(certificate.status)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {certificate.status === 'issued' ? (
-                          <>
-                            <a 
-                              href={certificate.downloadUrl} 
-                              className="text-indigo-600 hover:text-indigo-900 mr-4"
-                              download
-                            >
-                              <FiDownload />
-                            </a>
-                            <button className="text-gray-600 hover:text-gray-900">
-                              <FiPrinter />
-                            </button>
-                          </>
-                        ) : certificate.status === 'pending' ? (
-                          <button className="text-green-600 hover:text-green-900 mr-4">
-                            <FiCheckCircle />
-                          </button>
-                        ) : null}
-                        <button className="text-red-600 hover:text-red-900">
-                          <FiXCircle />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <FiAward className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-lg font-medium text-gray-900">No certificates found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                {searchTerm ? 'Try a different search term' : 'No certificates match the current filters'}
-              </p>
-            </div>
-          )}
-        </div>
-      </div> */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
         <div className="p-6">
-          <div className="mb-6">
-            <div className="relative max-w-md">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiSearch className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search certificates..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -335,7 +178,7 @@ export default function CertificatesPage() {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      User
+                      Student
                     </th>
                     <th
                       scope="col"
@@ -370,13 +213,13 @@ export default function CertificatesPage() {
                         {certificate.certificateId}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {certificate.user}
+                        {certificate.student}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {certificate.course}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {certificate.awardedAt}
+                        {certificate.issuedDate}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={statusBadge(certificate.status)}>

@@ -6,21 +6,43 @@ import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { getProfile } from '../services/userService';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { getSidebarBadgeCounts } from '../services/dashboardService';
 
 const AppLayout = ({ children, hideSidebar = false }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
+   const [badgeCounts, setBadgeCounts] = useState({
+     courses: 0,
+     students: 0,
+     instructors: 0,
+     payments: 0,
+     certificates: 0,
+   });
+   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      const userData = await getProfile();
-      setUser(userData);
-    };
-    loadUser();
-  }, []);
+   useEffect(() => {
+     const loadData = async () => {
+       try {
+         // Fetch in parallel
+         const [userData, counts] = await Promise.all([
+           getProfile(),
+           getSidebarBadgeCounts(), // Your API call
+         ]);
+         setUser(userData);
+         setBadgeCounts(counts);
+         console.log(counts);
+       } catch (error) {
+         console.error("Failed to load layout data:", error);
+       } finally {
+         setLoading(false);
+       }
+     };
+     loadData();
+   }, []);
 
-  if (!user) return <LoadingSpinner />;
+   if (loading) return <LoadingSpinner fullScreen />;
+
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -38,6 +60,7 @@ const AppLayout = ({ children, hideSidebar = false }) => {
             mobileSidebarOpen={mobileSidebarOpen}
             setMobileSidebarOpen={setMobileSidebarOpen}
             userProfile={user}
+            badgeCounts={badgeCounts} 
           />
         </>
       )}

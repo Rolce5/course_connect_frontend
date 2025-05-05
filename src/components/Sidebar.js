@@ -271,7 +271,8 @@ const Sidebar = ({
   sidebarOpen,
   mobileSidebarOpen,
   setMobileSidebarOpen,
-  userProfile
+  userProfile,
+  badgeCounts
 }) => {
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -311,7 +312,7 @@ const Sidebar = ({
       name: "Dashboard",
       icon: <FiHome className="w-5 h-5" />,
       path: "/dashboard",
-      badge: null
+      badge: null,
     },
     {
       name: "Courses",
@@ -321,40 +322,61 @@ const Sidebar = ({
         {
           name: "All Courses",
           path: "/admin/courses",
-          badge: 12
+          badge: badgeCounts?.courses || 0,
         },
         {
           name: "Add New",
-          path: "/admin/courses/new"
+          path: "/admin/courses/new",
         },
         {
           name: "Categories",
           path: "/admin/courses/categories",
-          badge: 5
-        }
-      ]
+          badge: 5,
+        },
+      ],
     },
     {
       name: "Students",
       icon: <FiUsers className="w-5 h-5" />,
       path: "/admin/students",
       submenu: [
-        { 
-          name: "All Students", 
+        {
+          name: "All Students",
           path: "/admin/students/all",
-          badge: 243
+          badge: badgeCounts?.students || 0,
         },
-        { 
-          name: "Enrollments", 
+        {
+          name: "Enrollments",
           path: "/admin/students/enrollments",
-          badge: 18
+          badge: badgeCounts?.enrollments || 0,
         },
-        { 
-          name: "Progress", 
-          path: "/admin/students/progress" 
-        }
-      ]
+        {
+          name: "Progress",
+          path: "/admin/students/progress",
+        },
+      ],
     },
+    {
+      name: "Instructors",
+      icon: <FiUser className="w-5 h-5" />,
+      path: "/admin/instructors",
+      submenu: [
+        {
+          name: "All Instructors",
+          path: "/admin/instructors/all",
+          badge: badgeCounts?.instructors || 0,
+        },
+        {
+          name: "Add New",
+          path: "/admin/instructors/new",
+        },
+        {
+          name: "Performance",
+          path: "/admin/instructors/performance",
+        },
+      ],
+    },
+
     // {
     //   name: "Content",
     //   icon: <FiLayers className="w-5 h-5" />,
@@ -369,13 +391,13 @@ const Sidebar = ({
       name: "Payments",
       icon: <FiDollarSign className="w-5 h-5" />,
       path: "/admin/payments",
-      badge: 3
+      badge: badgeCounts?.payments || 0,
     },
     {
       name: "Certificates",
       icon: <FiAward className="w-5 h-5" />,
       path: "/admin/certificates",
-      badge: 8
+      badge: badgeCounts?.certificates || 0,
     },
     {
       name: "Reports",
@@ -384,9 +406,82 @@ const Sidebar = ({
       submenu: [
         { name: "Revenue", path: "/admin/reports/revenue" },
         { name: "Engagement", path: "/admin/reports/engagement" },
-        { name: "Completion", path: "/admin/reports/completion" }
-      ]
-    }
+        { name: "Completion", path: "/admin/reports/completion" },
+      ],
+    },
+  ];
+  const instructorMenu = [
+    {
+      name: "Dashboard",
+      icon: <FiHome className="w-5 h-5" />,
+      path: "/dashboard",
+      badge: null,
+    },
+    {
+      name: "My Courses",
+      icon: <FiBook className="w-5 h-5" />,
+      path: "/admin/courses",
+      submenu: [
+        {
+          name: "All Courses",
+          path: "/admin/courses",
+          badge: badgeCounts?.courses || 0,
+        },
+        {
+          name: "Add New",
+          path: "/admin/courses/new",
+        },
+        {
+          name: "Categories",
+          path: "/admin/courses/categories",
+          badge: 5,
+        },
+      ],
+    },
+    {
+      name: "Students",
+      icon: <FiUsers className="w-5 h-5" />,
+      path: "/admin/students",
+      submenu: [
+        {
+          name: "All Students",
+          path: "/admin/students/all",
+          badge: badgeCounts?.students || 0,
+        },
+        {
+          name: "Enrollments",
+          path: "/admin/students/enrollments",
+          badge: badgeCounts?.enrollments || 0,
+        },
+        {
+          name: "Progress",
+          path: "/admin/students/progress",
+        },
+      ],
+    },
+
+    // {
+    //   name: "Content",
+    //   icon: <FiLayers className="w-5 h-5" />,
+    //   path: "/admin/content",
+    //   submenu: [
+    //     { name: "Modules", path: "/admin/content/modules" },
+    //     { name: "Lessons", path: "/admin/content/lessons" },
+    //     { name: "Quizzes", path: "/admin/content/quizzes" }
+    //   ]
+    // },
+    {
+      name: "Payments",
+      icon: <FiDollarSign className="w-5 h-5" />,
+      path: "/admin/payments",
+      badge: badgeCounts?.payments || 0,
+    },
+    {
+      name: "Certificates",
+      icon: <FiAward className="w-5 h-5" />,
+      path: "/admin/certificates",
+      badge: badgeCounts?.certificates || 0,
+    },
   ];
 
   // Student Menu Items
@@ -420,10 +515,23 @@ const Sidebar = ({
     }
   ];
 
-  const menuItems =
-    userProfile?.role === "ADMIN" || userProfile?.role === "INSTRUCTOR"
-      ? adminMenu
-      : studentMenu;
+    const getMenuItems = () => {
+      switch (userProfile?.role) {
+        case "ADMIN":
+          return adminMenu;
+        case "INSTRUCTOR":
+          return instructorMenu;
+        default:
+          return studentMenu;
+      }
+    };
+
+    const menuItems = getMenuItems();
+
+  // const menuItems =
+  //   userProfile?.role === "ADMIN" || userProfile?.role === "INSTRUCTOR"
+  //     ? adminMenu
+  //     : studentMenu;
 console.log("profile:", userProfile);
   const handleNavigation = (path) => {
     navigate(path);
