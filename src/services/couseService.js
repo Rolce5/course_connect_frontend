@@ -104,7 +104,7 @@ export const deleteCourse = async (courseId) => {
 
 export const getRecommendedCourses = async () => {
   try {
-    const response = await apiClient.get("/courses");
+    const response = await apiClient.get("/recommend-course");
     return response.data;
   } catch (error) {
     console.error(

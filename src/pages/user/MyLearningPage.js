@@ -27,7 +27,7 @@ export default function MyLearningPage() {
       setRecommendedCourses(courseData || []); 
       setEnrollments(enrollmentData);  
 
-      console.log(enrollments)
+      console.log("Enrolled Course: ", enrollments)
 
   
     } catch (error) {

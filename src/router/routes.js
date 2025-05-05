@@ -38,6 +38,7 @@ import HelpCenter from "../pages/user/HelpCenter";
 import SettingsPage from "../pages/SettingsPage";
 import QuizManagementPage from "../pages/admin/QuizManagementPage";
 import LessonDetailWithQuiz from "../pages/admin/LessonDetailWithQuiz";
+import CertificateViewer from "../pages/user/CertificateView";
 
 const routes = createBrowserRouter([
   {
@@ -103,6 +104,10 @@ const routes = createBrowserRouter([
           {
             path: "/student/help",
             element: <HelpCenter />,
+          },
+          {
+            path: "/certificates/:certificateId",
+            element: <CertificateViewer />,
           },
         ],
       },

@@ -67,10 +67,10 @@ export default function LessonDetailWithQuiz({ lessonId }) {
     setIsDeleting(true);
     try {
       const reponse = await deleteQuestion(id);
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.filter((q) => q.id !== id),
-    }));
+      setQuiz((prev) => ({
+        ...prev,
+        questions: prev.questions.filter((q) => q.id !== id),
+      }));
       setQuestionToDelete(null);
       (<toast className="success"></toast>)("Course deleted succusfully.");
     } catch (error) {
@@ -455,11 +455,11 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                                 <h3 className="font-medium text-gray-800">
                                   {question.question_text}
                                 </h3>
-                                <p
-                                  className="font-light text-gray-800  text-xs italic"
-                                >
-                                  Hint: {question.hint}
-                                </p>
+                                {question.hint && (
+                                  <p className="font-light text-gray-800  text-xs italic">
+                                    Hint: {question.hint}
+                                  </p>
+                                )}
                                 <ul className="mt-3 space-y-2">
                                   {question.options.map((option) => (
                                     <li

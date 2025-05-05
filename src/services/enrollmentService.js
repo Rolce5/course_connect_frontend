@@ -120,16 +120,3 @@ export const getLessonProgressForCourse = async (courseId) => {
   }
 };
 
-export const generateCertificate = async (courseId) => {
-    try {
-      const response = await apiClient.post(`/certificates/generate`, {
-        courseId,
-      });
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Failed to fetch courses",
-        error.response?.data || error.message
-      );
-    }
-};

@@ -192,6 +192,22 @@ const handleEnroll = async () => {
                   </p>
                 </div>
               </div>
+              {/* Add this below the instructor info in the hero section */}
+              <div className="mt-6 rounded-lg overflow-hidden shadow-md">
+                <div className="aspect-w-16 aspect-h-9 bg-black">
+                  <video
+                    controls
+                    poster={course.videoThumbnail || course.imageUrl}
+                    className="w-full h-full object-cover"
+                  >
+                    <source src={course.introVideoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 text-sm text-gray-600">
+                  Watch this short introduction to the course
+                </div>
+              </div>
             </div>
 
             <div className="md:w-1/3">

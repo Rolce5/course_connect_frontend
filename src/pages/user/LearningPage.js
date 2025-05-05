@@ -820,7 +820,10 @@ import {
   FiChevronRight,
   FiArrowLeft,
   FiMenu,
+  FiCheck,
 } from "react-icons/fi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import { useCourseData } from "../../hooks/useCourseData";
@@ -834,8 +837,8 @@ import {
 import {
   completeLesson,
   checkLessonProgress,
-  generateCertificate,
 } from "../../services/enrollmentService";
+import { generateCertificate } from "../../services/certificateService";
 
 const QuizModal = lazy(() => import("../../components/QuizModal"));
 const LessonSidebar = lazy(() => import("../../components/LessonSidebar"));
@@ -884,10 +887,14 @@ function quizReducer(state, action) {
     case "SUBMIT_QUIZ":
       return {
         ...state,
-        completed: action.payload.score >= 70, 
+        completed: action.payload.score >= 70,
         showModal: false,
         showReview: true,
-        attempts: [...state.attempts, action.payload.attempt],
+        attempts:
+          action.payload.score >= 70
+            ? state.attempts
+            : [...state.attempts, action.payload.attempt],
+
         score: action.payload.score,
         bestScore: Math.max(state.bestScore, action.payload.score),
       };
@@ -940,7 +947,6 @@ const LearningPage = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [quizLoading, setQuizLoading] = useState(false);
-
 
   const [quizState, dispatch] = useReducer(quizReducer, {
     showModal: false,
@@ -1032,8 +1038,7 @@ const LearningPage = () => {
   useEffect(() => {
     const loadLessonData = async () => {
       if (!currentLesson) return;
-          setQuizLoading(true);
-
+      setQuizLoading(true);
 
       try {
         const [noteData, attempts, lessonProgress] = await Promise.all([
@@ -1070,27 +1075,65 @@ const LearningPage = () => {
         dispatch({ type: "RESET_QUIZ" });
       } finally {
         if (initialLoad) setInitialLoad(false);
-              setQuizLoading(false);
-
+        setQuizLoading(false);
       }
     };
 
     loadLessonData();
   }, [currentLesson, initialLoad, videoCompleted]);
 
+  // useEffect(() => {
+  //   if (enrollment?.status === "COMPLETED") {
+  //     const handleCertificateGeneration = async () => {
+  //       try {
+  //         await generateCertificate(courseId);
+  //       } catch (error) {
+  //         console.error("Certificate generation failed:", error);
+  //       }
+  //     };
+  //     handleCertificateGeneration();
+  //   }
+  // }, [enrollment?.status, courseId]);
+
+  // In LearningPage component
+  // useEffect(() => {
+  //   if (enrollment?.status === "COMPLETED") {
+  //     const handleCertificateGeneration = async () => {
+  //       try {
+  //         const certificate = await generateCertificate(courseId);
+  //         // Show success notification
+  //         toast.success("Certificate generated successfully!", {
+  //           action: {
+  //             label: "View",
+  //             onClick: () => navigate(`/certificates/${certificate.id}`),
+  //           },
+  //         });
+  //       } catch (error) {
+  //         console.error("Certificate generation failed:", error);
+  //         toast.error("Failed to generate certificate");
+  //       }
+  //     };
+  //     handleCertificateGeneration();
+  //   }
+  // }, [enrollment?.status, courseId, navigate]);
   useEffect(() => {
     if (enrollment?.status === "COMPLETED") {
       const handleCertificateGeneration = async () => {
         try {
-          await generateCertificate(courseId);
+          const certificate = await generateCertificate(courseId);
+          console.log("Certificate: ", certificate);
+          // toast.success("Certificate generated successfully!", {
+          // onClick: () =>
+          navigate(`/certificates/${certificate.id}`);
+          // });
         } catch (error) {
           console.error("Certificate generation failed:", error);
+          toast.error("Failed to generate certificate");
         }
       };
       handleCertificateGeneration();
     }
-  }, [enrollment?.status, courseId]);
-
+  }, [enrollment?.status, courseId, navigate]);
 
   const handleNoteSave = useCallback(async () => {
     try {
@@ -1392,7 +1435,7 @@ const LearningPage = () => {
             </button>
 
             <div className="flex space-x-2">
-              {currentLesson?.quiz?.questions?.length > 0 && (
+              {/* {currentLesson?.quiz?.questions?.length > 0 && (
                 <button
                   onClick={() => {
                     if (quizState.attempts.length >= 3) {
@@ -1418,8 +1461,40 @@ const LearningPage = () => {
                       ? `Retake Quiz (${attemptsLeft} left)`
                       : "Take Quiz"}
                 </button>
-              )}
-
+              )} */}
+              {currentLesson?.quiz?.questions?.length > 0 &&
+                (!quizState.completed ? ( // Only show if quiz is not completed
+                  <button
+                    onClick={() => {
+                      if (quizState.attempts.length >= 3) {
+                        alert("Maximum attempts reached...");
+                      } else {
+                        if (quizState.attempts.length > 0) {
+                          prepareQuizRetake();
+                        } else {
+                          dispatch({ type: "SHOW_MODAL" });
+                        }
+                      }
+                    }}
+                    disabled={quizLoading || attemptsLeft <= 0}
+                    className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg text-sm lg:text-base ${
+                      quizState.attempts?.length >= 3
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-yellow-500 hover:bg-yellow-600 text-white"
+                    }`}
+                  >
+                    {quizLoading
+                      ? "Loading..."
+                      : quizState.attempts.length > 0
+                        ? `Retake Quiz (${attemptsLeft} left)`
+                        : "Take Quiz"}
+                  </button>
+                ) : (
+                  <div className="px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg text-sm lg:text-base bg-green-500 text-white">
+                    <FiCheck className="inline mr-1" />
+                    Quiz Passed
+                  </div>
+                ))}
               <button
                 onClick={goToNextLesson}
                 disabled={
