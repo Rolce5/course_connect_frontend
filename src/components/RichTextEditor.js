@@ -10,18 +10,59 @@ const RichTextEditor = ({
   height = 300,
   menubar = false,
   required = false,
-  error = null,
+  maxLength,
+  error
 }) => {
-  const handleEditorChange = (content) => {
-    // Simulate a regular input change event
-    onChange({
-      target: {
-        name, // The field name
-        value: content,
-        type: "richtext",
-      },
-    });
-  };
+  // const handleEditorChange = (content) => {
+  //   if (maxLength && content.length > maxLength) {
+  //     return;
+  //   }
+
+  //   // Simulate a regular input change event
+  //   onChange({
+  //     target: {
+  //       name, // The field name
+  //       value: content,
+  //       type: "richtext",
+  //     },
+  //   });
+  // };
+
+    const handleEditorChange = (content) => {
+      // Ensure we don't proceed if content is empty when required
+      if (required && !content.trim()) {
+        onChange({
+          target: {
+            name,
+            value: "",
+            type: "richtext",
+          },
+        });
+        return;
+      }
+
+      if (maxLength && content.length > maxLength) {
+        // Instead of returning, trim the content to maxLength
+        content = content.substring(0, maxLength);
+      }
+
+      onChange({
+        target: {
+          name,
+          value: content,
+          type: "richtext",
+        },
+      });
+    };
+
+    const charCountColor = maxLength
+      ? value.length > maxLength
+        ? "text-red-600"
+        : value.length > maxLength * 0.9
+          ? "text-yellow-600"
+          : "text-gray-500"
+      : "text-gray-500";
+
 
   return (
     <div className="mb-4">
@@ -52,6 +93,11 @@ const RichTextEditor = ({
         }}
       />
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {maxLength && (
+        <p className={`mt-1 text-xs ${charCountColor}`}>
+          {value.length}/{maxLength} characters
+        </p>
+      )}
     </div>
   );
 };

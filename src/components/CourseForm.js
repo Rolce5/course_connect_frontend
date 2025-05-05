@@ -30,12 +30,49 @@ export default function CourseForm({
 
   const [imagePreview, setImagePreview] = useState(course?.imageUrl || null);
   const [imageFile, setImageFile] = useState(null); // Store the image file
-  const [videoFile, setVideoFile] = useState(null); // Add this line with other state declarations
+  const [videoFile, setVideoFile] = useState(null); 
 
   const navigate = useNavigate();
 
+  const MAX_SHORT_DESC = 1000; 
+  const MAX_DESC = 10000;
+
+  const [validationErrors, setValidationErrors] = useState({
+    shortDescription: null,
+    description: null,
+  });
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    // Validate rich text fields
+    if (name === "shortDescription") {
+      if (value.length > MAX_SHORT_DESC) {
+        setValidationErrors((prev) => ({
+          ...prev,
+          shortDescription: `Maximum ${MAX_SHORT_DESC} characters allowed`,
+        }));
+      } else {
+        setValidationErrors((prev) => ({
+          ...prev,
+          shortDescription: null,
+        }));
+      }
+    }
+
+    if (name === "description") {
+      if (value.length > MAX_DESC) {
+        setValidationErrors((prev) => ({
+          ...prev,
+          description: `Maximum ${MAX_DESC} characters allowed`,
+        }));
+      } else {
+        setValidationErrors((prev) => ({
+          ...prev,
+          description: null,
+        }));
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
@@ -73,6 +110,10 @@ export default function CourseForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+      if (validationErrors.shortDescription || validationErrors.description) {
+        return;
+      }
+
     const formDataToSend = new FormData();
 
     // Only append fields that exist in your DTO
@@ -108,16 +149,6 @@ export default function CourseForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
-      {/* Header Section */}
-      <div className="border-b border-gray-200 pb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
-          {course ? "Edit Course" : "Create New Course"}
-        </h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Fill in the details below to {course ? "update" : "create"} your
-          course
-        </p>
-      </div>
 
       {serverError && (
         <motion.div
@@ -171,57 +202,38 @@ export default function CourseForm({
           />
         </div>
 
+
         {/* Short Description */}
         <div className="mt-6">
-          {/* <label className="block text-sm font-medium text-gray-700 mb-1">
-            Short Description*
-          </label>
-          <textarea
+          <RichTextEditor
+            label="Short Description"
             name="shortDescription"
             value={formData.shortDescription}
             onChange={handleChange}
-            rows={4}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-            placeholder="A brief overview of the course"
-            required
-          /> */}
-          <RichTextEditor
-            label="Short Description"
-            name="shortDescription" // Must match your formData key
-            value={formData.shortDescription}
-            onChange={handleChange} // Your existing handleChange function
             required
             menubar={true}
             height={250}
+            maxLength={MAX_SHORT_DESC}
+            error={validationErrors.shortDescription}
           />
         </div>
 
         {/* Description */}
         <div className="mt-6">
-          {/* <label className="block text-sm font-medium text-gray-700 mb-1">
-            Detailed Description*
-          </label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-            placeholder="What will students learn in this course?"
-            required
-          /> */}
           <RichTextEditor
             label="Detailed Description
 "
-            name="description" // Must match your formData key
+            name="description"
             value={formData.description}
-            onChange={handleChange} // Your existing handleChange function
+            onChange={handleChange}
             required
             menubar={true}
             height={250}
+            maxLength={MAX_DESC}
+            error={validationErrors.shortDescription}
           />
+        
         </div>
-
         {/* Category & Difficulty */}
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Category */}

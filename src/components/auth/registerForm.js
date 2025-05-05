@@ -152,7 +152,12 @@ export default function RegisterForm() {
       setSuccessMessage(
         "Registration successful! Redirecting to your dashboard..."
       );
-      navigate("/dashboard"); // Redi
+
+      if (response.role == "STUDENT") {
+        navigate("/student/learning");
+      } else {
+        navigate("/admin/dashboard");
+      }
       <toast className="success"></toast>('Course deleted succusfully.');
 
     } catch (error) {

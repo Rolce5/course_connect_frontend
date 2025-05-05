@@ -31,7 +31,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
   const [quizFormData, setQuizFormData] = useState({
     title: "",
-    hint: "",
+    description: "",
     lessonId: lesson.id, // Add this
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -122,14 +122,10 @@ export default function LessonDetailWithQuiz({ lessonId }) {
       // Prepare payload in consistent backend format
       const payload = {
         question: currentQuestion.question_text,
+        hint: currentQuestion.hint,
         options: currentQuestion.options.map((opt) => ({
-          // optionText: opt.text || opt.optionText, // Handle both 'text' and 'option' fields
-          //           optionText: opt.optionText || "", // Ensure optionText is used
-          // isCorrect: opt.isCorrect
           optionText: opt.optionText || opt.option_text || "", // Handle both cases
           isCorrect: opt.isCorrect || opt.is_correct || false,
-
-          // isCorrect: opt.isCorrect || opt.is_correct, // Handle both cases
         })),
       };
 
@@ -381,7 +377,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                           onClick={() => {
                             setQuizFormData({
                               title: quiz.title,
-                              hint: quiz.hint,
+                              description: quiz.description,
                             });
                             setIsCreatingQuiz(true);
                           }}
@@ -395,6 +391,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                             setCurrentQuestion({
                               id: null,
                               question: "",
+                              hint: "",
                               options: [
                                 { id: 1, optionText: "", isCorrect: false },
                                 { id: 2, optionText: "", isCorrect: false },
@@ -426,6 +423,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                             setCurrentQuestion({
                               id: null,
                               question: "",
+                              hint: "",
                               options: [
                                 { id: 1, optionText: "", isCorrect: false },
                                 { id: 2, optionText: "", isCorrect: false },
@@ -457,6 +455,9 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                                 <h3 className="font-medium text-gray-800">
                                   {question.question_text}
                                 </h3>
+                                <h3 className="font-medium text-gray-800">
+                                  {question.hint}
+                                </h3>
                                 <ul className="mt-3 space-y-2">
                                   {question.options.map((option) => (
                                     <li
@@ -481,6 +482,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                                     setCurrentQuestion({
                                       ...question,
                                       question: question.question_text,
+                                      hint: question.hint,
                                       options: question.options.map((opt) => ({
                                         id: opt.id,
                                         optionText: opt.option_text,
@@ -567,6 +569,23 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                       rows={3}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="Enter the question text"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hint
+                    </label>
+                    <textarea
+                      value={currentQuestion.hint}
+                      onChange={(e) =>
+                        setCurrentQuestion({
+                          ...currentQuestion,
+                          hint: e.target.value,
+                        })
+                      }
+                      rows={2}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Enter the hint text"
                     />
                   </div>
 
@@ -753,19 +772,18 @@ export default function LessonDetailWithQuiz({ lessonId }) {
                     </div>
                   </div>
                 </div>
-
                 {/* Quiz Description */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Hint
+                    Description
                   </label>
                   <div className="relative">
                     <textarea
-                      value={quizFormData.hint}
+                      value={quizFormData.description}
                       onChange={(e) =>
                         setQuizFormData({
                           ...quizFormData,
-                          hint: e.target.value,
+                          description: e.target.value,
                         })
                       }
                       rows={3}
@@ -839,7 +857,6 @@ export default function LessonDetailWithQuiz({ lessonId }) {
         onClose={() => setQuestionToDelete(null)}
         onConfirm={() => handleDelete(questionToDelete?.id)}
         title="Confirm Deletion"
-        // message={`Are you sure you want to delete the course "${questionToDelete?.question}"? This action cannot be undone.`}
         message={
           <>
             Are you sure you want to delete this quiz question{" "}

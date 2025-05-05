@@ -834,6 +834,7 @@ import {
 import {
   completeLesson,
   checkLessonProgress,
+  generateCertificate,
 } from "../../services/enrollmentService";
 
 const QuizModal = lazy(() => import("../../components/QuizModal"));
@@ -1077,6 +1078,20 @@ const LearningPage = () => {
     loadLessonData();
   }, [currentLesson, initialLoad, videoCompleted]);
 
+  useEffect(() => {
+    if (enrollment?.status === "COMPLETED") {
+      const handleCertificateGeneration = async () => {
+        try {
+          await generateCertificate(courseId);
+        } catch (error) {
+          console.error("Certificate generation failed:", error);
+        }
+      };
+      handleCertificateGeneration();
+    }
+  }, [enrollment?.status, courseId]);
+
+
   const handleNoteSave = useCallback(async () => {
     try {
       await saveNote({ lessonId: currentLesson.id, content: notes });
@@ -1170,7 +1185,6 @@ const LearningPage = () => {
 
     dispatch({ type: "RESET_QUIZ" });
 
-
     if (currentLesson?.videoUrl && !videoCompleted) {
       alert("Please complete the video before proceeding");
       return;
@@ -1204,9 +1218,17 @@ const LearningPage = () => {
         setVideoCompleted(false);
         dispatch({ type: "RESET_QUIZ" });
         setInitialLoad(true);
-      }
         setCurrentLesson(nextLesson);
-
+      } else if (!isLastLesson) {
+        // Generate certificate before navigation
+        try {
+          await generateCertificate(courseId);
+        } catch (error) {
+          console.error("Certificate generation failed:", error);
+        }
+        navigate(`/courses/${courseId}/complete`);
+        return;
+      }
     } catch (error) {
       console.error("Lesson navigation failed:", error);
     } finally {
@@ -1224,6 +1246,7 @@ const LearningPage = () => {
     courseId,
     navigate,
     updateProgress,
+    generateCertificate,
   ]);
 
   const goToPreviousLesson = useCallback(async () => {
