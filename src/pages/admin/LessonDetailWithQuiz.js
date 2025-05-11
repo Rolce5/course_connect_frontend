@@ -518,7 +518,7 @@ export default function LessonDetailWithQuiz({ lessonId }) {
       </main>
 
       {/* Question Editor Modal */}
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {isEditing && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -703,7 +703,202 @@ export default function LessonDetailWithQuiz({ lessonId }) {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
+      <div>
+        {/* Modal backdrop */}
+        {isEditing && (
+          <div className="fixed inset-0 z-50">
+            {/* Backdrop with transition */}
+            <div
+              className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+                isEditing ? "opacity-100" : "opacity-0"
+              }`}
+            />
+
+            {/* Modal container */}
+            <div className="fixed inset-0 flex items-center justify-center p-4">
+              {/* Modal content with transition */}
+              <div
+                className={`bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-all duration-300 ${
+                  isEditing
+                    ? "opacity-100 scale-100 translate-y-0"
+                    : "opacity-0 scale-95 translate-y-5"
+                }`}
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      {currentQuestion.id ? "Edit Question" : "New Question"}
+                    </h2>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="text-gray-400 hover:text-gray-500 p-1 rounded-full hover:bg-gray-100"
+                    >
+                      <FiX size={20} />
+                    </button>
+                  </div>
+
+                  {error && (
+                    <div
+                      className={`flex items-center gap-3 p-3 mb-6 bg-red-50 text-red-600 rounded-lg border border-red-100 transition-opacity duration-300 ${
+                        error ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      <FiAlertCircle className="flex-shrink-0" />
+                      <span className="text-sm">{error}</span>
+                    </div>
+                  )}
+
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Question
+                      </label>
+                      <textarea
+                        value={currentQuestion.question_text}
+                        onChange={(e) =>
+                          setCurrentQuestion({
+                            ...currentQuestion,
+                            question_text: e.target.value,
+                          })
+                        }
+                        rows={3}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Enter the question text"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Hint
+                      </label>
+                      <textarea
+                        value={currentQuestion.hint}
+                        onChange={(e) =>
+                          setCurrentQuestion({
+                            ...currentQuestion,
+                            hint: e.target.value,
+                          })
+                        }
+                        rows={2}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Enter the hint text"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Options
+                        </label>
+                        <button
+                          onClick={() =>
+                            setCurrentQuestion((prev) => ({
+                              ...prev,
+                              options: [
+                                ...prev.options,
+                                {
+                                  id: Date.now(),
+                                  optionText: "",
+                                  isCorrect: false,
+                                },
+                              ],
+                            }))
+                          }
+                          className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center"
+                        >
+                          <FiPlus className="mr-1" /> Add Option
+                        </button>
+                      </div>
+
+                      <div className="space-y-3">
+                        {currentQuestion.options.map((option) => (
+                          <div
+                            key={option.id}
+                            className="flex items-start space-x-3"
+                          >
+                            <div className="flex-1">
+                              <input
+                                type="text"
+                                value={option.optionText || ""}
+                                onChange={(e) => {
+                                  const updatedOptions =
+                                    currentQuestion.options.map((opt) =>
+                                      opt.id === option.id
+                                        ? { ...opt, optionText: e.target.value }
+                                        : opt
+                                    );
+                                  setCurrentQuestion({
+                                    ...currentQuestion,
+                                    options: updatedOptions,
+                                  });
+                                }}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Option text"
+                              />
+                            </div>
+                            <div className="flex items-center h-11">
+                              <input
+                                id={`correct-${option.id}`}
+                                name="correctOption"
+                                type="radio"
+                                checked={option.isCorrect || option.is_correct}
+                                onChange={() => {
+                                  const updatedOptions =
+                                    currentQuestion.options.map((opt) => ({
+                                      ...opt,
+                                      isCorrect: opt.id === option.id,
+                                    }));
+                                  setCurrentQuestion({
+                                    ...currentQuestion,
+                                    options: updatedOptions,
+                                  });
+                                }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                              />
+                            </div>
+                            <button
+                              onClick={() => {
+                                const updatedOptions =
+                                  currentQuestion.options.filter(
+                                    (opt) => opt.id !== option.id
+                                  );
+                                setCurrentQuestion({
+                                  ...currentQuestion,
+                                  options: updatedOptions,
+                                });
+                              }}
+                              className="text-gray-400 hover:text-red-500 h-11 flex items-center px-2"
+                            >
+                              <FiX />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(false)}
+                        className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSaveQuestion()}
+                        className="px-4 py-2 bg-indigo-600 border border-transparent rounded-lg text-white font-medium hover:bg-indigo-700 transition-colors"
+                      >
+                        Save Question
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Quiz Creation Modal */}
       <AnimatePresence>

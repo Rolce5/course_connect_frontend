@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import {
   FiBarChart2,
   FiTrendingUp,
@@ -23,7 +24,10 @@ const InstructorPerformancePage = () => {
   ];
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen">
+      <Helmet>
+        <title>Instructor Performance || CourseConnect</title>
+      </Helmet>
       <div className="max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
           Instructor Performance

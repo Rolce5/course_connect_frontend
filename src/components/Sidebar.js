@@ -346,6 +346,16 @@ const Sidebar = ({
           badge: badgeCounts?.students || 0,
         },
         {
+          name: "Enrolled Students",
+          path: "/admin/students/enrolled",
+          badge: badgeCounts?.enrolledStudents || 0,
+        },
+        {
+          name: "Not Enrolled",
+          path: "/admin/students/not-enrolled",
+          badge: badgeCounts?.notEnrolledStudents || 0,
+        },
+        {
           name: "Enrollments",
           path: "/admin/students/enrollments",
           badge: badgeCounts?.enrollments || 0,
@@ -553,19 +563,11 @@ console.log("profile:", userProfile);
 
   return (
     <>
-      {/* Mobile Backdrop */}
-      {mobileSidebarOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black/50 lg:hidden"
-          onClick={() => setMobileSidebarOpen(false)}
-        />
-      )}
-
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white shadow-xl transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } ${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white shadow-xl transition-all duration-300 ease-in-out
+    ${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+    lg:translate-x-0 lg:relative ${sidebarOpen ? "" : "lg:w-0 lg:overflow-hidden"}`}
       >
         <div className="flex h-full flex-col">
           {/* Sidebar Header */}
@@ -574,7 +576,9 @@ console.log("profile:", userProfile);
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600">
                 <FiBookOpen className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">CourseConnect</span>
+              <span className="text-xl font-bold text-gray-900">
+                CourseConnect
+              </span>
             </div>
             <button
               className="rounded-lg p-1 text-gray-500 hover:bg-gray-100 lg:hidden"

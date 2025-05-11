@@ -1,95 +1,94 @@
-import { useCallback, useEffect, useState } from 'react';
-import { FiUsers, FiSearch, FiFilter, FiChevronDown, FiChevronUp, FiEdit2, FiTrash2, FiPlus } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
-import { getStudents } from '../../services/userService';
+import { useCallback, useEffect, useState } from "react";
+import {
+  FiUsers,
+  FiSearch,
+  FiFilter,
+  FiChevronDown,
+  FiChevronUp,
+  FiEdit2,
+  FiTrash2,
+  FiPlus,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { getStudents } from "../../services/userService";
 import { getLastActiveDate } from "../../utils/dateUtils";
+import StatusBadge from "../../components/StatusBadge";
 import { Helmet } from "react-helmet";
-
+import TableSkeletonLoading from "../../components/TableSkeletonLoading";
 
 export default function StudentsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState('all');
-   const [students, setStudents] = useState([]);
-   const [loading, setLoading] = useState(true);
-   const [pagination, setPagination] = useState({
-     page: 1,
-     limit: 10,
-     total: 0,
-     totalPages: 1,
-   });
-
-   const fetchStudents = useCallback(async () => {
-     try {
-       const { data, pagination: paginationData } = await getStudents(
-         pagination.page,
-         pagination.limit
-       );
-       setStudents(data);
-       console.log(data);
-       setPagination((prev) => ({
-         ...prev,
-         total: paginationData.total,
-         totalPages: paginationData.totalPages,
-       }));
-     } catch (error) {
-       console.error("Error fetching payments:", error);
-     } finally {
-       setLoading(false);
-     }
-   }, [pagination.page, pagination.limit]);
-
-   useEffect(() => {
-     fetchStudents();
-   }, [fetchStudents]);
-
-   const handlePageChange = (newPage) => {
-     setPagination((prev) => ({ ...prev, page: newPage }));
-   };
-
-   const handleLimitChange = (e) => {
-     setPagination((prev) => ({
-       ...prev,
-       limit: Number(e.target.value),
-       page: 1,
-     }));
-   };
-
-
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = 
-      `${student.first_name} ${student.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      student.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = 
-      activeFilter === 'all' || 
-      (activeFilter === 'active' && student.status === 'active') || 
-      (activeFilter === 'inactive' && student.status === 'inactive');
-    return matchesSearch && matchesFilter;
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 1,
   });
 
-  const statusBadge = (status) => {
-    return status === 'active' ? (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-        Active
-      </span>
-    ) : (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-        Inactive
-      </span>
-    );
+  const fetchStudents = useCallback(async () => {
+    try {
+      const { data, pagination: paginationData } = await getStudents(
+        pagination.page,
+        pagination.limit
+      );
+      setStudents(data);
+      console.log(data);
+      setPagination((prev) => ({
+        ...prev,
+        total: paginationData.total,
+        totalPages: paginationData.totalPages,
+      }));
+    } catch (error) {
+      console.error("Error fetching payments:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
+
+  const handlePageChange = (newPage) => {
+    setPagination((prev) => ({ ...prev, page: newPage }));
   };
+
+  const handleLimitChange = (e) => {
+    setPagination((prev) => ({
+      ...prev,
+      limit: Number(e.target.value),
+      page: 1,
+    }));
+  };
+
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch =
+      `${student.first_name} ${student.last_name}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      activeFilter === "all" ||
+      (activeFilter === "active" && student.status === "active") ||
+      (activeFilter === "inactive" && student.status === "inactive");
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Helmet>
-        <title>Students</title>
+        <title>Students || CourseConnect</title>
       </Helmet>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
           All Students
         </h1>
         <Link
-          to="/admin/students/new"
+          to=""
           className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
         >
           <FiPlus className="mr-2" /> Add Student
@@ -150,8 +149,10 @@ export default function StudentsPage() {
               )}
             </div>
           </div>
-
-          {filteredStudents.length > 0 ? (
+          {loading ? (
+            // Skeleton Loading
+            <TableSkeletonLoading />
+          ) : filteredStudents.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -222,7 +223,7 @@ export default function StudentsPage() {
                         {student.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {statusBadge(student.status)}
+                        <StatusBadge isActive={student.status} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {student.enrollments.length}

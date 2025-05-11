@@ -58,7 +58,7 @@ const AdminDashboardPage = () => {
   return (
     <div>
       <Helmet>
-        <title>Dashbaord</title>
+        <title>Dashbaord || CourseConnect</title>
       </Helmet>
       {/* Page title and actions */}
       <div className="mb-6 flex items-center justify-between">

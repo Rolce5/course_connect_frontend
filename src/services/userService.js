@@ -28,6 +28,22 @@ export const getStudents = async (page = 1, limit = 10) => {
   }
 };
 
+export const getInstructors = async (page = 1, limit = 10, search = '') => {
+  try {
+    const response = await apiClient.get(
+      `/users/instructors?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    );
+    return {
+      data: response.data.instructors,
+      pagination: response.pagination, // Ensure your backend returns pagination info
+    };
+  } catch (error) {
+    console.error("Failed to fetch instructors", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 export const getProfile = async () => {
   try{
     const response = await apiClient.get("/users/profile");

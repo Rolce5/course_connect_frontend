@@ -28,6 +28,7 @@ export default function CourseListPage() {
       try {
         const data = await getAllCourses();
         setCourses(data || []);
+        console.log(data);
       } catch (error) {
         console.error("Failed to load courses:", error);
       } finally {
@@ -68,7 +69,7 @@ export default function CourseListPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <Helmet>
-        <title>Courses</title>
+        <title>Courses || CourseConnect</title>
       </Helmet>
       {/* Delete Confirmation Modal */}
       <ConfirmModal

@@ -5,7 +5,7 @@ const LoginPage = () => {
     return (
         <>
         <Helmet>
-            <title>Login</title>
+            <title>Login || CourseConnect</title>
         </Helmet>
 
         <LoginForm />

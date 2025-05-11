@@ -3,13 +3,13 @@ import RegisterForm from "../../components/auth/registerForm";
 
 const RegisterPage = () => {
     return (
-        <>
+      <>
         <Helmet>
-            <title>Register</title>
+          <title>Register || CourseConnect</title>
         </Helmet>
 
         <RegisterForm />
-        </>
+      </>
     );
 };
 

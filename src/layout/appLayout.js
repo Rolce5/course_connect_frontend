@@ -60,13 +60,16 @@ const AppLayout = ({ children, hideSidebar = false }) => {
             mobileSidebarOpen={mobileSidebarOpen}
             setMobileSidebarOpen={setMobileSidebarOpen}
             userProfile={user}
-            badgeCounts={badgeCounts} 
+            badgeCounts={badgeCounts}
           />
         </>
       )}
 
       {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      {/* <div className="flex flex-1 flex-col overflow-hidden w-full"> */}
+      <div
+        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${sidebarOpen ? "lg:ml-0" : ""}`}
+      >
         <Header
           setMobileSidebarOpen={setMobileSidebarOpen}
           setSidebarOpen={setSidebarOpen}
@@ -76,9 +79,9 @@ const AppLayout = ({ children, hideSidebar = false }) => {
         />
 
         <main className="flex-1 overflow-y-auto bg-gray-50">
-          <div className="mx-auto max-w-full">
+          <div className="mx-auto max-w-full p-4">
             {/* {children || <Outlet />} */}
-            <Outlet context={{ user }} /> {/* 👈 Critical change */}
+            <Outlet context={{ user }} />
           </div>
         </main>
 

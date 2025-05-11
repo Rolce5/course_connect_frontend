@@ -43,7 +43,10 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm">
+    // <header className="flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm">
+    <header
+      className={`flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm ${sidebarOpen ? "lg:pl-4" : "lg:pl-4"}`}
+    >
       <div className="flex items-center space-x-4">
         {/* Sidebar toggle buttons */}
         <button
@@ -58,7 +61,7 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
         >
           <FiMenu className="h-6 w-6" />
         </button>
-        
+
         {/* Search bar */}
         <div className="relative max-w-md flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -71,11 +74,11 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
           />
         </div>
       </div>
-      
+
       <div className="flex items-center space-x-4">
         {/* Notification button with dropdown */}
         <div className="relative">
-          <button 
+          <button
             className="relative rounded-lg p-1 text-gray-500 hover:bg-gray-100"
             onClick={handleNotificationClick}
           >
@@ -86,13 +89,15 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
               </span>
             )}
           </button>
-          
+
           {/* Notification dropdown */}
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-80 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
               <div className="p-2">
                 <div className="flex items-center justify-between border-b px-4 py-2">
-                  <h3 className="text-lg font-medium text-gray-900">Notifications</h3>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Notifications
+                  </h3>
                   <button className="text-sm text-indigo-600 hover:text-indigo-800">
                     Mark all as read
                   </button>
@@ -101,16 +106,19 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
                   {notifications.length > 0 ? (
                     <ul className="divide-y divide-gray-100">
                       {notifications.map((notification) => (
-                        <li key={notification.id} className={`px-4 py-3 hover:bg-gray-50 ${!notification.read ? 'bg-blue-50' : ''}`}>
+                        <li
+                          key={notification.id}
+                          className={`px-4 py-3 hover:bg-gray-50 ${!notification.read ? "bg-blue-50" : ""}`}
+                        >
                           <div className="flex items-start">
                             <div className="flex-shrink-0 pt-1">
-                              {notification.type === 'message' && (
+                              {notification.type === "message" && (
                                 <FiMessageSquare className="h-5 w-5 text-blue-500" />
                               )}
-                              {notification.type === 'alert' && (
+                              {notification.type === "alert" && (
                                 <FiAlertCircle className="h-5 w-5 text-yellow-500" />
                               )}
-                              {notification.type === 'success' && (
+                              {notification.type === "success" && (
                                 <FiCheckCircle className="h-5 w-5 text-green-500" />
                               )}
                             </div>
@@ -141,7 +149,10 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
                   )}
                 </div>
                 <div className="border-t px-4 py-2 text-center">
-                  <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                  <a
+                    href="#"
+                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                  >
                     View all notifications
                   </a>
                 </div>
@@ -149,12 +160,15 @@ const Header = ({ setMobileSidebarOpen, setSidebarOpen, sidebarOpen, userProfile
             </div>
           )}
         </div>
-        
+
         {/* User profile */}
         <div className="relative">
           <button className="flex items-center space-x-2 rounded-lg p-1 hover:bg-gray-100">
             <img
-              src={userProfile.profilePic || "https://www.gravatar.com/avatar/?d=mp&s=200"}
+              src={
+                userProfile.profilePic ||
+                "https://www.gravatar.com/avatar/?d=mp&s=200"
+              }
               alt="User profile"
               className="h-8 w-8 rounded-full"
             />

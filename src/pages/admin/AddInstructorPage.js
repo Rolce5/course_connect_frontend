@@ -36,8 +36,8 @@ const AddInstructorPage = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
           Add New Instructor
         </h1>
